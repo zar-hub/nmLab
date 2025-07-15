@@ -1,0 +1,13 @@
+lunedì 14 aprile 2025 - 18:25:07
+
+Energy (eV)
+304
+
+Number of Frames
+50
+
+Temperature (°C)
+60.5
+
+Pressure (mbar)
+1.103E-9

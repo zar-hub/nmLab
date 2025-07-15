@@ -1,0 +1,13 @@
+mercoledì 23 aprile 2025 - 18:35:52
+
+Energy (eV)
+231
+
+Number of Frames
+50
+
+Temperature (°C)
+-1.771E+2
+
+Pressure (mbar)
+4.563E-10

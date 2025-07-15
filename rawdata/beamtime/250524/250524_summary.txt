@@ -1,0 +1,1886 @@
+File: SE0524_001
+    Measurement completed at: 12:17:54 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.470mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.040mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.610mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_002
+    Measurement completed at: 12:50:52 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.040mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.040mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_003
+    Measurement completed at: 12:52:37 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=10.11meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.400mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.040mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_004
+    Measurement completed at: 1:08:13 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.300mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.039mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_005
+    Measurement completed at: 9:33:18 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.690mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.487mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_006
+    Measurement completed at: 9:33:55 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.560mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.487mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_007
+    Measurement completed at: 9:38:35 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.080mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.487mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_008
+    Measurement completed at: 9:41:20 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=67.00eV; FINAL B.E.=62.00eV; STEP=20.94meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=2
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.350mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.045mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.589mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_009
+    Measurement completed at: 9:43:50 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=67.00eV; FINAL B.E.=62.00eV; STEP=20.94meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.380mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.045mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.588mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_010
+    Measurement completed at: 9:59:42 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.190mA
+    Beam X Position: -0.011mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.612mm
+    Undulator TAP  : 0.198mm
+
+
+
+File: SE0524_011
+    Measurement completed at: 10:00:59 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 260.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=169.00eV; FINAL B.E.=165.00eV; STEP=38.91meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.090mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 22.212mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_012
+    Measurement completed at: 10:53:07 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=10
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 278.960mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : OFF
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_013
+    Measurement completed at: 11:09:36 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.230mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_014
+    Measurement completed at: 11:13:57 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.220mA
+    Beam X Position: -0.011mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_015
+    Measurement completed at: 11:17:31 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=286.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.130mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_016
+    Measurement completed at: 11:18:49 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=286.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.260mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_017
+    Measurement completed at: 11:39:03 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=286.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.040mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_018
+    Measurement completed at: 11:42:16 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=72.00eV; FINAL B.E.=62.00eV; STEP=20.22meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.450mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.045mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.588mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_019
+    Measurement completed at: 11:43:37 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.130mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_020
+    Measurement completed at: 11:44:37 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=286.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.360mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_021
+    Measurement completed at: 11:45:11 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.020mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_022
+    Measurement completed at: 11:45:35 AM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.860mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_023
+    Measurement completed at: 11:47:32 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=286.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=2
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.530mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_024
+    Measurement completed at: 11:50:46 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=286.50eV; STEP=20.55meV
+    P.E.=4.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 278.980mA
+    Beam X Position: -0.010mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : OFF
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_025
+    Measurement completed at: 11:53:45 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=9.59meV
+    P.E.=4.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.570mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_026
+    Measurement completed at: 11:56:22 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=67.00eV; FINAL B.E.=62.00eV; STEP=20.94meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.960mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.045mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.591mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_027
+    Measurement completed at: 11:58:40 AM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=4.80eV; FINAL B.E.=3.80eV; STEP=10.11meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.220mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.045mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.588mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_028
+    Measurement completed at: 1:02:56 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=72.00eV; FINAL B.E.=62.00eV; STEP=20.22meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.290mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.590mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_029
+    Measurement completed at: 1:04:25 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 278.940mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : OFF
+    Undulator GAP  : 27.490mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_030
+    Measurement completed at: 1:06:20 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=67.00eV; FINAL B.E.=62.00eV; STEP=20.94meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.790mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.589mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_031
+    Measurement completed at: 1:14:32 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.370mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.612mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_032
+    Measurement completed at: 1:18:20 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=67.00eV; FINAL B.E.=62.00eV; STEP=20.94meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.500mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.587mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_033
+    Measurement completed at: 1:20:10 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=4.80eV; FINAL B.E.=3.80eV; STEP=10.11meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.410mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.587mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_034
+    Measurement completed at: 1:31:03 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.430mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_035
+    Measurement completed at: 1:33:25 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.380mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_036
+    Measurement completed at: 1:41:36 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=10
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.680mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_037
+    Measurement completed at: 1:43:58 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=10.11meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.290mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_038
+    Measurement completed at: 1:47:34 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.55meV
+    P.E.=4.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.610mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_039
+    Measurement completed at: 1:49:27 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=9.59meV
+    P.E.=4.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.110mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_040
+    Measurement completed at: 2:30:48 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=294.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.930mA
+    Beam X Position: -0.009mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.044mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_041
+    Measurement completed at: 2:40:48 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.00eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=10
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.890mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_042
+    Measurement completed at: 2:42:43 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=10.11meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.950mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_043
+    Measurement completed at: 3:02:52 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.00eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.120mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_044
+    Measurement completed at: 3:52:15 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.00eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.520mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_045
+    Measurement completed at: 3:53:53 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 260.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=169.00eV; FINAL B.E.=165.00eV; STEP=38.91meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.860mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 22.211mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_046
+    Measurement completed at: 3:55:12 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 260.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=169.00eV; FINAL B.E.=165.00eV; STEP=38.91meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.700mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 22.211mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_047
+    Measurement completed at: 3:59:48 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.100mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.610mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_048
+    Measurement completed at: 4:02:11 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 200.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=67.00eV; FINAL B.E.=62.00eV; STEP=20.94meV
+    P.E.=2.00eV; Dwell Time=0.1000s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.250mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 19.593mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_049
+    Measurement completed at: 4:15:11 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.250mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_050
+    Measurement completed at: 4:17:28 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=10.11meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.040mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_051
+    Measurement completed at: 4:21:33 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=9.59meV
+    P.E.=4.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.250mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_052
+    Measurement completed at: 4:24:58 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.55meV
+    P.E.=4.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.070mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_053
+    Measurement completed at: 4:45:09 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.00eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.150mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_054
+    Measurement completed at: 4:49:01 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.760mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.610mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_055
+    Measurement completed at: 4:58:37 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.340mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.122mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.610mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_056
+    Measurement completed at: 5:07:32 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.330mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.486mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_057
+    Measurement completed at: 5:12:03 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.630mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.043mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_058
+    Measurement completed at: 5:22:56 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.50eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.400mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_059
+    Measurement completed at: 5:42:49 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.670mA
+    Beam X Position: -0.008mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.612mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_060
+    Measurement completed at: 5:44:39 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.960mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.612mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_061
+    Measurement completed at: 6:03:15 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.160mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_062
+    Measurement completed at: 6:05:28 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=10.11meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.410mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_063
+    Measurement completed at: 6:48:16 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.00eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.270mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_064
+    Measurement completed at: 7:09:34 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.190mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.041mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.611mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_065
+    Measurement completed at: 7:10:45 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 260.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=169.00eV; FINAL B.E.=165.00eV; STEP=38.91meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.210mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.042mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 22.212mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_066
+    Measurement completed at: 8:18:20 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.640mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.040mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_067
+    Measurement completed at: 8:20:12 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=10.11meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.100mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.040mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_068
+    Measurement completed at: 8:49:51 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.00eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.330mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.040mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.489mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_069
+    Measurement completed at: 9:08:19 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.450mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.038mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.608mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_070
+    Measurement completed at: 9:39:32 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.530mA
+    Beam X Position: -0.005mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.038mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_071
+    Measurement completed at: 9:42:43 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=10.11meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.510mA
+    Beam X Position: -0.005mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.038mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_072
+    Measurement completed at: 9:52:19 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.00eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.620mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.038mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.202mm
+
+
+
+File: SE0524_073
+    Measurement completed at: 10:10:56 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.230mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.037mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.612mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_074
+    Measurement completed at: 10:32:21 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.670mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.037mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.488mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_075
+    Measurement completed at: 10:34:16 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=10.11meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.090mA
+    Beam X Position: -0.005mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.037mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_076
+    Measurement completed at: 10:50:21 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.00eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.500mA
+    Beam X Position: -0.005mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.037mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.485mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_077
+    Measurement completed at: 10:56:41 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.630mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.037mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 37.609mm
+    Undulator TAP  : 0.200mm
+
+
+
+File: SE0524_078
+    Measurement completed at: 11:23:32 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=290.50eV; FINAL B.E.=285.50eV; STEP=20.21meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=5
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.330mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.037mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.486mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_079
+    Measurement completed at: 11:25:34 PM
+    Experiment Type: Sweep Mode - Standard (sum)
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=5.00eV; FINAL B.E.=3.50eV; STEP=10.11meV
+    P.E.=5.00eV; Dwell Time=0.1000s; Scans=3
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.250mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.037mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.486mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_080
+    Measurement completed at: 11:47:44 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 400.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=293.00eV; FINAL B.E.=285.50eV; STEP=30.32meV
+    P.E.=5.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 280.330mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.037mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : ON
+    Undulator GAP  : 27.486mm
+    Undulator TAP  : 0.201mm
+
+
+
+File: SE0524_081
+    Measurement completed at: 11:52:02 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 650.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=538.00eV; FINAL B.E.=531.00eV; STEP=61.61meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 278.970mA
+    Beam X Position: -0.007mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.038mm
+    Beam Y Angle   : 0.014mrad
+    Top Up Status  : OFF
+    Undulator GAP  : 37.610mm
+    Undulator TAP  : 0.199mm
+
+
+
+File: SE0524_082
+    Measurement completed at: 11:53:27 PM
+    Experiment Type: Sweep Mode - Time Resolved
+    Excitation source: Elettra; 
+  Excitation energy: 260.00 eV
+    Analyzer Lens Mode: Medium Area:1500 eV
+    Detector Limits: 0, 679, 0, 899
+  1D Spectrum
+    START B.E.=169.00eV; FINAL B.E.=165.00eV; STEP=38.91meV
+    P.E.=10.00eV; Dwell Time=0.0500s; Scans=1
+  Ring parameters:
+    Ring Energy    : 2.0GeV
+    Ring Current   : 279.380mA
+    Beam X Position: -0.006mm
+    Beam X Angle   : -0.121mrad
+    Beam Y Position: -0.039mm
+    Beam Y Angle   : 0.015mrad
+    Top Up Status  : ON
+    Undulator GAP  : 22.212mm
+    Undulator TAP  : 0.201mm
+
+
+
