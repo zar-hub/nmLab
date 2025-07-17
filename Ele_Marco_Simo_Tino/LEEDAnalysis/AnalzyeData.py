@@ -2,6 +2,7 @@ import pickle
 import numpy as np 
 import pandas as pd
 import pprint
+import matplotlib.pyplot as plt
 
 def pretty(d, indent=0):
    for key, value in d.items():
@@ -104,7 +105,9 @@ def make_stats(batch):
 if __name__ == '__main__':
 
 	fnames = ['LEED_2025_04_23_006', 'LEED_2025_04_23_007','LEED_2025_04_23_008', 'LEED_2025_04_23_009']
+	data = []
 	results = []
+
 
 	for fname in fnames:
 		with open(fname + '.pkl', 'rb') as f:
@@ -122,12 +125,78 @@ if __name__ == '__main__':
 		print('\n=== INPUT DATA ===\n')
 		print(df[['type', 'orientation', 'center']])
 
+		# Append Data
+		data.append(df)
+
 		# Append Result
 		res = make_stats(df)
 		results.append(res)
 
 print('\n === RESULTS ===\n')
+
+res_file = open('results.txt', 'w')
 for i in range(len(results)):
+	
 	with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-		print('\n\nFILENAME : ', fnames[i])	
+		res_file.write('\n\n\n\nFILENAME : %s\n' % fnames[i])
+		res_file.write('__________________________________________________________________\n')
+		res_file.write(results[i].to_string())
+		s = print('\n\nFILENAME : ', fnames[i])	
 		print(results[i])
+res_file.close()
+
+
+oriToTheta = {
+	'10' : 0, 
+	'01' : np.pi / 3,
+	'-11' : np.pi * 2 / 3,
+	'-10' : np.pi,
+	'0-1' : np.pi * 4 / 3,
+	'1-1' : np.pi * 5 / 3,
+}
+
+# Now do a cumulative analysis
+data = pd.concat(data)
+
+#fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+# data.apply(lambda x : ax.scatter(oriToTheta[x['orientation']], x['length']), axis = 1)
+
+
+
+fig, ax = plt.subplots()
+def pf(x, ax):
+	print(x['type'], x['orientation'])
+	if x['type'] == 'ir':
+		ax.scatter(*x['center'], marker = '.', alpha = 0.7, c ='red')
+	else:
+		ax.scatter(*x['center'], marker = 'x', alpha = 0.3, c ='blue')
+
+
+data.apply(pf, ax = ax,  axis = 1)
+#ax.set_rmax(180)
+#ax.set_rticks([10, 20, 150, 160, 170, 180])  # Less radial ticks
+#ax.set_rlabel_position(-22.5)  # Move radial labels away from plotted line
+
+
+ax.set_title("LEED DATA", va='bottom')
+plt.show()
+
+
+data = data[data['orientation'] != '00']
+with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+	print(data[['fname', 'type', 'orientation', 'length']])
+	cum_res = data.groupby(['type', 'orientation']).agg(
+		mean_length = ('length', 'mean'),
+		std_length = ('length', 'std')
+	)
+	cum_res = cum_res.unstack('type')
+
+	cum_res['mean_ratio'] = cum_res['mean_length']['mo'] / cum_res['mean_length']['ir']
+	cum_res['std_error'] = cum_res['mean_ratio'] * (
+		(cum_res['std_length']['mo'] / cum_res['mean_length']['mo']) ** 2 +
+		(cum_res['std_length']['ir'] / cum_res['mean_length']['ir']) ** 2
+	) ** 0.5
+
+	# Flatten columns
+	cum_res.columns = ['_'.join(col).strip() for col in cum_res.columns.values]
+	print(cum_res)
