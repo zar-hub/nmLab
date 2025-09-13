@@ -15,6 +15,7 @@ Fatto questo si fitta il picco del C-1s con DS convoluto con una Gausssiana.
 
 # LEED Imaging Software
 - Software python per la correzione delle aberrazioni nelle immagini LEED e fitting degli spot di diffrazione. Realizzato con Tkinter.
-  
+- [Link cartella](Ele_Marco_Simo_Tino/LEEDAnalysis)
+
 https://github.com/user-attachments/assets/0aea8b1c-03c5-4b4d-a699-d3dae4394418
 
