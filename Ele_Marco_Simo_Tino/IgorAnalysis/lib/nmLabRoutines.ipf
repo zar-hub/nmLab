@@ -44,12 +44,20 @@ end
 
 
 function fitC1S_simple(wave image, int i)
+
 	string name = nameofWave(image)
 	wave fit = $(name + "_FIT")
 	wave coeff = $(name + "_COEFF")
 	wave sigma = $(name + "_SIGMA")
+	string tboxName
 	
-	FuncFit/TBOX=768/Q/N=2 dsgn_MTHR coeff[][i], image[][i] /d=fit[][i]
+	tboxName = "CF_" + name
+	FuncFit/Q/N=2 dsgn_MTHR coeff[][i], image[][i] /d=fit[][i]
+	wave W_sigma = $"W_sigma"
+   sigma[][i] = W_sigma[p] 
+	replacetext/n=$tboxName "\f01 Lineshape : DSGN \f00"
+	addEntriesToTBOX(tboxName, coeff, sigma, i=i)
+	
 end
 
 Function UserPauseCheck(graphName, autoAbortSecs)
@@ -130,7 +138,7 @@ end
 
 
 
-function fitImageC1S(wave initial_coeff, wave src_image)
+function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
 	
 	// names
 	string name = nameOfWave(src_image)
@@ -165,44 +173,46 @@ function fitImageC1S(wave initial_coeff, wave src_image)
 	
 	// temp graph helpers
 	duplicate/free initial_coeff, tcoeff, tsigma
-	duplicate/rmd=[][0] image, slice 
-	redimension/n=(-1,0) slice 
+	duplicate/o/rmd=[][0] image, slice, slice_fit
+	redimension/n=(-1,0) slice, slice_fit
 	
 	// create the graph if not open
-    display/n=name/w=(0,0,600,300)
-    gName = winname(0, 1)
-    wname = nameOfWave(image)
+   display/n=name/w=(0,0,750,400)
+   gName = winname(0, 1)
+   wname = nameOfWave(image)
     
-    // Put the box up left
+   // Put the box up left
  	tboxName = "CF_" + wname
-    // TextBox/C/N=$tboxName/A=LT/X=3.52/Y=4.69
+ 	// add two percent of padding to X and Y
+   TextBox/C/N=$tboxName/A=LT/X=47/Y=2
     
-    variable i, N, j
-    string num, trace
-    N = dimsize(image, 1)
+   variable i, N, j
+   string num, trace
+   N = dimsize(image, 1)
     
-    // create a graph to check
-    fit[][0] = Dsgn_MTHR(initial_coeff, x)
-    appendToGraph slice, fit[][0]
+   // create a graph to check
+   slice_fit = Dsgn_MTHR(initial_coeff, x)
+   
+   appendToGraph slice
+   appendToGraph/b=bFit/l=lFit slice, slice_fit
+   ModifyGraph freePos(lFit)={0.45,kwFraction}
+   ModifyGraph axisEnab(bFit)={0.45,1},freePos(bFit)=0
+   ModifyGraph axisEnab(bottom)={0,0.35},freePos(bFit)=0
+    
+   // check if starting values are correct
+   variable didAbort = 0
+   didAbort = UserPauseCheck(gname, 5)
+   if (didAbort)
+   	// go back to root
+   	setdataFolder "root:"
+   	return -1
+   endif
     
     
-    // check if starting values are correct
-    variable didAbort = 0
-    didAbort = UserPauseCheck(gname, 5)
-    if (didAbort)
-    	// go back to root
-    	setdataFolder "root:"
-    	return -1
-    endif
-    
-    // reset graph
-    removefromGraph/all
-    appendToGraph slice
-    
-    // loop trough slices
-    for (i = 0; i < N; i++)   	
-    	// fit stuff
-    	fitC1S_simple(image, i)
+	// loop trough slices
+   for (i = 0; i < N; i++)   	
+   	// fit stuff
+   	fitC1S_simple(image, i)
     		
    	// update next coeff and save errors
     	if(i < N - 1)
@@ -214,14 +224,16 @@ function fitImageC1S(wave initial_coeff, wave src_image)
     	// make a nice graph
     	num = "#" + num2str(i)
     	
-    	//appendtograph image[][i]/tn=$("slice" + num)
     	slice = image[p][i]
-    	// fit[][i] = fit[p][i] + 13 * (N - i)
+    	slice_fit = dsgn_MTHR(tcoeff, x)
+    	
+    	if(!paramisDefault(offset))
+    		fit[][i] = fit[p][i] + offset * (N - i)
+    	endif
+    	
     	appendtograph fit[][i]/tn=$("fit_slice" + num)
     	tcoeff = coeff[p][i]
     	tsigma = sigma[p][i]
-    	
-    	//addEntriesToTBOX(tboxName, tcoeff, tsigma)
     	
     	if(i>2)
     		num = "#" + num2str(i - 3)
@@ -231,9 +243,9 @@ function fitImageC1S(wave initial_coeff, wave src_image)
     		ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
     	endif
     	
-    	doupdate
-    endfor
+    	doupdate 
+	endfor
     
-    // go back to root
-    setdataFolder "root:"
+   // go back to root
+   setdataFolder "root:"
 end

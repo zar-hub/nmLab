@@ -121,25 +121,32 @@ end
 
 
 
-function addEntriesToTBOX(tbox, coeff, err)
+function addEntriesToTBOX(tbox, coeff, err, [i])
 	string tbox
 	wave coeff, err
+	int i
 	
 	string entry, lab
-	variable i, N
+	variable j, N
+	
+	i = paramIsDefault(i) ? 0 : i
 	N = dimSize(coeff, 0)
 	
-	for(i = 0; i < N; i++)
+	duplicate/free/rmd=[][i] coeff coeff_1d
+	redimension/n=(-1,0) coeff_1d
+	duplicate/free/rmd=[][i] err err_1d
+	redimension/n=(-1,0) err_1d
+	
+	for(j = 0; j < N; j++)
 		
 		// correct label for whitespaces
-		lab = getDimLabel(coeff, 0, i)
-		lab = padString(lab, 12, 0x20)
-		
-		sprintf entry, "   %s %.3f ± %.3f", lab, coeff[i], err[i]
+		lab = getDimLabel(coeff_1d, 0, j)
+		lab = padString(lab, 12, 0x20) //0x20 is a space
+		sprintf entry, "   %s %.3f ± %.3f", lab, coeff_1d[j], err_1d[j]
 		appendText/n=$tbox entry
+		
 	endfor
 end
-
 
 
 // === PEAK ANALYSIS ===
