@@ -99,6 +99,49 @@ end
 // === IMAGING ===
 
 
+function setLabelsFromString(wave w, wave /T labels)
+	variable i, N
+	N = dimsize(w,0)
+	
+	for(i = 0; i < N; i++)
+		setDimLabel 0, i, $(labels[i]), w
+	endfor
+end 
+
+
+
+function printInfo(w)
+	wave w
+	string str = "Rows"
+
+	print "dim \t\t size \t\t offset \t delta \r"
+	printf "%s \t %d \t\t %d \t\t %d \r", "Rows", dimSize(w, 0), dimOffset(w, 0), dimDelta(w, 0)
+	printf "%s \t %d \t\t %d \t\t %d \r", "Cols", dimSize(w, 1), dimOffset(w, 1), dimDelta(w, 1)
+end
+
+
+
+function addEntriesToTBOX(tbox, coeff, err)
+	string tbox
+	wave coeff, err
+	
+	string entry, lab
+	variable i, N
+	N = dimSize(coeff, 0)
+	
+	for(i = 0; i < N; i++)
+		
+		// correct label for whitespaces
+		lab = getDimLabel(coeff, 0, i)
+		lab = padString(lab, 12, 0x20)
+		
+		sprintf entry, "   %s %.3f ± %.3f", lab, coeff[i], err[i]
+		appendText/n=$tbox entry
+	endfor
+end
+
+
+
 // === PEAK ANALYSIS ===
 // THE FOLLOWING FUNCTIONS ARE SUPPOSED TO USE
 // IN ORDER
