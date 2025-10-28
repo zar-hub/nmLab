@@ -146,9 +146,7 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
 	string imagePath 
 	string gName, wname, tboxName
 	
-	
 	// ----------- ORDER HERE MATTERS -----------
-	
 	
 	// create folder if not exists
 	if(!dataFolderExists(folderName))
@@ -160,10 +158,9 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
 	print "saving to folder", imagePath
 	duplicate/o src_image, $imagePath
 	
-	// go into the folder
+	// go into the folder and
+	// create other waves 
 	setDataFolder $folderName
-	
-	// create other waves in the folder
 	wave image = $name
 	wave fit = copy_append(image, "_FIT")
 	wave coeff = copy_append_coeff(image, initial_coeff, "_COEFF") 
@@ -172,7 +169,6 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
 	// --------- END ORDER HERE MATTERS ----------
 	
 	// temp graph helpers
-	duplicate/free initial_coeff, tcoeff, tsigma
 	duplicate/o/rmd=[][0] image, slice, slice_fit
 	redimension/n=(-1,0) slice, slice_fit
 	
@@ -182,8 +178,8 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
    wname = nameOfWave(image)
     
    // Put the box up left
+   // add two percent of padding to X and Y
  	tboxName = "CF_" + wname
- 	// add two percent of padding to X and Y
    TextBox/C/N=$tboxName/A=LT/X=47/Y=2
     
    variable i, N, j
@@ -193,7 +189,7 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
    // create a graph to check
    slice_fit = Dsgn_MTHR(initial_coeff, x)
    
-   appendToGraph slice
+   appendToGraph slice, slice_fit
    appendToGraph/b=bFit/l=lFit slice, slice_fit
    ModifyGraph freePos(lFit)={0.45,kwFraction}
    ModifyGraph axisEnab(bFit)={0.45,1},freePos(bFit)=0
@@ -210,6 +206,7 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
     
     
 	// loop trough slices
+	printf "looping through %d slices", N
    for (i = 0; i < N; i++)   	
    	// fit stuff
    	fitC1S_simple(image, i)
@@ -232,19 +229,22 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
     	endif
     	
     	appendtograph fit[][i]/tn=$("fit_slice" + num)
-    	tcoeff = coeff[p][i]
-    	tsigma = sigma[p][i]
     	
-    	if(i>2)
-    		num = "#" + num2str(i - 3)
-    		trace = "'slice" + num + "'"
-    		ModifyGraph lsize($trace)=0.7,rgb($trace)=(13107,13107,13107)
+    	if (i > 0)
+    		num = "#" + num2str(i - 1)
     		trace = "'fit_slice" + num + "'"
     		ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
     	endif
     	
     	doupdate 
 	endfor
+	
+	// one last time 
+	num = "#" + num2str(i - 1)
+   trace = "'fit_slice" + num + "'"
+   
+	// ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
+	removeFromGraph slice, slice_fit
     
    // go back to root
    setdataFolder "root:"
