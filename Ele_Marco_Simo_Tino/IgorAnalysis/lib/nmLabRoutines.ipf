@@ -43,23 +43,6 @@ function createWavesC1S_simple(wave image)
 end
 
 
-function fitC1S_simple(wave image, int i)
-
-	string name = nameofWave(image)
-	wave fit = $(name + "_FIT")
-	wave coeff = $(name + "_COEFF")
-	wave sigma = $(name + "_SIGMA")
-	string tboxName
-	
-	tboxName = "CF_" + name
-	FuncFit/Q/N=2 dsgn_MTHR coeff[][i], image[][i] /d=fit[][i]
-	wave W_sigma = $"W_sigma"
-   sigma[][i] = W_sigma[p] 
-	replacetext/n=$tboxName "\f01 Lineshape : DSGN \f00"
-	addEntriesToTBOX(tboxName, coeff, sigma, i=i)
-	
-end
-
 Function UserPauseCheck(graphName, autoAbortSecs)
 	String graphName
 	Variable autoAbortSecs
@@ -73,8 +56,8 @@ Function UserPauseCheck(graphName, autoAbortSecs)
 	NewPanel /K=2 /W=(187,368,437,531) as "Pause for Cursor"
 	DoWindow/C tmp_PauseforCursor // Set to an unlikely name
 	AutoPositionWindow/E/M=1/R=$graphName // Put panel near the graph
-	DrawText 21,20,"Adjust the cursors and then"
-	DrawText 21,40,"Click Continue."
+	DrawText 21,20,"Check if valid initial parameters"
+	DrawText 21,40,"then click continue or abort."
 	Button button0,pos={80,58},size={92,20},title="Continue"
 	Button button0,proc=UserPauseCheck_ContButtonProc
 	
@@ -114,13 +97,35 @@ Function UserPauseCheck_ContButtonProc(ctrlName) : ButtonControl
 	DoWindow/K tmp_PauseforCursor // Kill panel
 End
 
-function fitC1S_CO(wave image, int i)
+
+function fitC1S_simple(wave image, int i)
+
 	string name = nameofWave(image)
+	string tboxName
 	wave fit = $(name + "_FIT")
-	wave coeff_C1S = $(name + "_COEFF_C1S")
-	wave sigma_C1S = $(name + "_SIGMA_C1S")
-	wave coeff_CO = $(name + "_COEFF_CO")
-	wave sigma_CO = $(name + "_SIGMA_CO")
+	wave coeff = $(name + "_COEFF")
+	wave sigma = $(name + "_SIGMA")
+	
+	
+	FuncFit/Q/N=2 dsgn_MTHR coeff[][i], image[][i] /d=fit[][i]
+	
+	wave W_sigma = $"W_sigma"
+	tboxName = "CF_" + name
+   sigma[][i] = W_sigma[p] 
+	replacetext/n=$tboxName "\f01 Lineshape : DSGN \f00"
+	addEntriesToTBOX(tboxName, coeff, sigma, i=i)
+	
+end
+
+
+function fitC1S_CO(wave image, int i)
+
+	string name = nameofWave(image)
+	string tboxName
+	wave fit = $(name + "_FIT")
+	wave coeff = $(name + "_COEFF")
+	wave sigma = $(name + "_SIGMA")
+	
 	
 	duplicate/o/rmd=[][i] image slice, mask
 	redimension/n=(-1,0) slice, mask

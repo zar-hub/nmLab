@@ -1,5 +1,7 @@
-# nmLab
- Repo per il laboratorio nanomateriali 2025.
+# nmLab Laboratorio Nanomateriali 2024-2025
+![](.documents/Pensieri.docx.svg)
+![](.documents/hexgrid.svg)
+
 
 # Assignments
 ## 1 ) Analisi dati lab in prosp. conf. beamtime 
@@ -13,9 +15,11 @@ Bisogna stare attenti di non fittare la coda destra del rumore perché, sebbene 
 Fatto questo si fitta il picco del C-1s con DS convoluto con una Gausssiana. 
 - Analizzare le immagini LEED dell'iridio pulito e del grafene sull'iridio in modo da stimare la periodicità in spazio reale del reticolo di moiré e del carbonio. 
 
-# LEED Imaging Software
-- Software python per la correzione delle aberrazioni nelle immagini LEED e fitting degli spot di diffrazione. Realizzato con Tkinter.
-- [Link cartella](Ele_Marco_Simo_Tino/LEEDAnalysis)
 
-https://github.com/user-attachments/assets/0aea8b1c-03c5-4b4d-a699-d3dae4394418
+
+
+<div align="center">
+  <img src="Ele_Marco_Simo_Tino/LEEDAnalysis/LEED.mp4" style="width:75%;">
+</div>
+
 
