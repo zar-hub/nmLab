@@ -38,9 +38,6 @@ function sliceImage(image, offset)
 	endfor
 end
 
-function createWavesC1S_simple(wave image)
-
-end
 
 
 Function UserPauseCheck(graphName, autoAbortSecs)
@@ -98,22 +95,23 @@ Function UserPauseCheck_ContButtonProc(ctrlName) : ButtonControl
 End
 
 
-function fitC1S_simple(wave image, int i)
+function fitC1S_simple(coeff, src, [res])
+	// Expects an open graph to plot the fit process to.
+	// Data is appended to default axis names, so one should 
+	// leave them for this function to handle and plot to other 
+	// axis in the same graph.
+	wave coeff, src, res
+	string name = nameofWave(src)
+	
+	if(paramisDefault(res))
+		duplicate/o src res
+		
+	endif
 
-	string name = nameofWave(image)
-	string tboxName
-	wave fit = $(name + "_FIT")
-	wave coeff = $(name + "_COEFF")
-	wave sigma = $(name + "_SIGMA")
+	FuncFit/Q/N=2 dsgn_MTHR coeff, src
 	
 	
-	FuncFit/Q/N=2 dsgn_MTHR coeff[][i], image[][i] /d=fit[][i]
-	
-	wave W_sigma = $"W_sigma"
-	tboxName = "CF_" + name
-   sigma[][i] = W_sigma[p] 
-	replacetext/n=$tboxName "\f01 Lineshape : DSGN \f00"
-	addEntriesToTBOX(tboxName, coeff, sigma, i=i)
+	appendtoGraph src, res
 	
 end
 
@@ -148,7 +146,7 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
 	// names
 	string name = nameOfWave(src_image)
 	string folderName = name + "_FOLDER"
-	string imagePath 
+	string imagePath, initialCoeffPath
 	string gName, wname, tboxName
 	
 	// ----------- ORDER HERE MATTERS -----------
@@ -160,8 +158,10 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
 	
 	// duplicate the image inside the folder
 	sprintf imagePath, "root:%s:%s", folderName, name
+	sprintf initialCoeffPath, "root:%s:%s", folderName, "initial_coeff"
 	print "saving to folder", imagePath
 	duplicate/o src_image, $imagePath
+	duplicate/o initial_coeff, $initialCoeffPath
 	
 	// go into the folder and
 	// create other waves 
@@ -174,18 +174,28 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
 	// --------- END ORDER HERE MATTERS ----------
 	
 	// temp graph helpers
+	duplicate/o initial_coeff slice_coeff
 	duplicate/o/rmd=[][0] image, slice, slice_fit
 	redimension/n=(-1,0) slice, slice_fit
 	
+	// CREATE PANEL
+	newpanel/W=(0,0,750,400) as name + " Panel"
+	DoWindow/C $( name + "Panel" )
+	gName = winname(0, 64)
+   printf "Created Panel %s", gName
 	// create the graph if not open
-   display/n=name/w=(0,0,750,400)
-   gName = winname(0, 1)
-   wname = nameOfWave(image)
-    
+   display/host=#/n=sliceFit/w=(0,0,0.60,1)
+   appendToGraph slice, slice_fit
+   
    // Put the box up left
    // add two percent of padding to X and Y
  	tboxName = "CF_" + wname
-   TextBox/C/N=$tboxName/A=LT/X=47/Y=2
+   TextBox/C/N=$tboxName/A=LT/X=2/Y=2
+   setactiveSubwindow ##
+   
+   display/host=#/n=image/w=(0.61,0,1,1)
+   appendToGraph slice, slice_fit
+   setactiveSubwindow ##
     
    variable i, N, j
    string num, trace
@@ -194,12 +204,13 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
    // create a graph to check
    slice_fit = Dsgn_MTHR(initial_coeff, x)
    
-   appendToGraph slice, slice_fit
-   appendToGraph/b=bFit/l=lFit slice, slice_fit
-   ModifyGraph freePos(lFit)={0.45,kwFraction}
-   ModifyGraph axisEnab(bFit)={0.45,1},freePos(bFit)=0
-   ModifyGraph axisEnab(bottom)={0,0.35},freePos(bFit)=0
-    
+   
+   //
+   // appendToGraph/b=bImage/l=lImage slice, slice_fit
+   //ModifyGraph freePos(lImage)={0.65,kwFraction}
+   //ModifyGraph axisEnab(bImage)={0.65,1},freePos(bImage)=0
+   //ModifyGraph axisEnab(bottom)={0,0.55}
+   
    // check if starting values are correct
    variable didAbort = 0
    didAbort = UserPauseCheck(gname, 5)
@@ -214,25 +225,41 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
 	printf "looping through %d slices", N
    for (i = 0; i < N; i++)   	
    	// fit stuff
-   	fitC1S_simple(image, i)
+   	
+   	slice = image[p][i]
+   	slice_coeff = coeff[p][i]
+   	
+   	setactiveSubwindow #sliceFit
+   	removefromGraph/all
+   	fitC1S_simple(slice_coeff, slice, res=slice_fit)
+   	
+   	
+   	// save fit coeffs
+   	coeff[][i] = slice_coeff[p]
+   	replacetext/n=$tboxName "\f01 Lineshape : DSGN \f00"
+		addEntriesToTBOX(tboxName, coeff, sigma, i=i)
+    	setactiveSubwindow ##
     		
    	// update next coeff and save errors
     	if(i < N - 1)
     		coeff[][i + 1] = coeff[p][i]
-    		wave W_sigma = $"W_sigma"
-    		sigma[][i] = W_sigma[p] // default sigma wave used by FuncFit
+    		wave w_sigma = $"W_sigma"
+    		sigma[][i] = w_sigma[p] // default sigma wave used by FuncFit
     	endif
     	
     	// make a nice graph
     	num = "#" + num2str(i)
     	
     	slice = image[p][i]
-    	slice_fit = dsgn_MTHR(tcoeff, x)
+    	slice_fit = dsgn_MTHR(slice_coeff, x)
+    	fit[][i] = slice_fit[p]
     	
     	if(!paramisDefault(offset))
     		fit[][i] = fit[p][i] + offset * (N - i)
     	endif
     	
+    
+    	setactiveSubwindow #image
     	appendtograph fit[][i]/tn=$("fit_slice" + num)
     	
     	if (i > 0)
@@ -240,16 +267,19 @@ function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
     		trace = "'fit_slice" + num + "'"
     		ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
     	endif
+    	setactiveSubwindow ##
     	
     	doupdate 
 	endfor
 	
 	// one last time 
+	setactiveSubwindow #image
 	num = "#" + num2str(i - 1)
    trace = "'fit_slice" + num + "'"
-   
-	// ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
+	ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
+	
 	removeFromGraph slice, slice_fit
+	setactiveSubwindow ##
     
    // go back to root
    setdataFolder "root:"
