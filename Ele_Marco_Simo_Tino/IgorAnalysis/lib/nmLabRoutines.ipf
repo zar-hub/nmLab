@@ -109,37 +109,75 @@ function fitC1S_simple(coeff, src, [res])
 	endif
 
 	FuncFit/Q/N=2 dsgn_MTHR coeff, src
-	
-	
 	appendtoGraph src, res
-	
-end
-
-
-function fitC1S_CO(wave image, int i)
-
-	string name = nameofWave(image)
-	string tboxName
-	wave fit = $(name + "_FIT")
-	wave coeff = $(name + "_COEFF")
-	wave sigma = $(name + "_SIGMA")
-	
-	
-	duplicate/o/rmd=[][i] image slice, mask
-	redimension/n=(-1,0) slice, mask
-	
-	execute "mask(-285.76, ) = 0"
-	
-	display slice, mask
-	
-	FuncFit/TBOX=768/x Dsgn_MTHR coeff_CO[][i] slice /M=mask/D
-	
-	//FuncFit/TBOX=25/N=2/Q dsgn_MTHR coeff[][i], image[][i] /d=fit[][i]
 end
 
 
 
+function fitC1S_CO(coeff, src, [res, wait])
+	// Expects an open graph to plot the fit process to.
+	// Data is appended to default axis names, so one should 
+	// leave them for this function to handle and plot to other 
+	// axis in the same graph.
+	
+	wave coeff, src, res
+	int wait
+	
+	duplicate/o src C1S, CO, mask
+	duplicate/free coeff tcoeff
+	
+	if(paramisDefault(res))
+		duplicate/o src res
+	endif
 
+	// plot stuff in case wait is true
+	res = dsgnmBad2_MTHR(coeff, x)
+	tcoeff = coeff
+	tcoeff[0,1] = 0
+	tcoeff[10] = 0
+	CO = dsgnmBad2_MTHR(tcoeff, x)
+	tcoeff = coeff
+	tcoeff[0,1] = 0
+	tcoeff[5] = 0
+	C1S = dsgnmBad2_MTHR(tcoeff, x)
+	
+	// display 			// enable when debugging
+	appendtoGraph src, res, mask, CO, C1S
+	ModifyGraph lsize(res)=1.3,rgb(res)=(0,0,65535)
+	ModifyGraph mode(CO)=7,lsize(CO)=1.3,rgb(CO)=(1,34817,52428)
+	ModifyGraph hbFill(CO)=2, plusRGB(CO)=(1,34817,52428,16384), usePlusRGB(CO)=1
+	ModifyGraph mode(C1S)=7,lsize(C1S)=1.3,rgb(C1S)=(36873,14755,58982)
+	ModifyGraph hbFill(C1S)=2,plusRGB(C1S)=(36873,14755,58982,16384), usePlusRGB(C1S)=1
+	
+	if(!paramisDefault(wait))
+		return 0
+	endif
+	
+	execute "mask(-285.76, -282) = 0"
+	Make/O/T constrains={"K4 > 0"}
+	FuncFit/N=2 Dsgn_MTHR coeff[0,6] src /M=mask/c=constrains
+	
+	tcoeff = coeff
+	tcoeff[10] = 0
+	tcoeff[0,6] = coeff[p]
+	CO = Dsgn_MTHR(tcoeff, x)
+	C1S = src - CO
+	
+	FuncFit/N=2 dsgnnb_MTHR coeff[7,11], C1S
+	FuncFit/Q/N=2 dsgnmBad2_MTHR coeff src
+	
+	// update stuff again
+	removefromGraph mask
+	res = dsgnmBad2_MTHR(coeff, x)
+	tcoeff = coeff
+	tcoeff[0,1] = 0
+	tcoeff[10] = 0
+	CO = dsgnmBad2_MTHR(tcoeff, x)
+	tcoeff = coeff
+	tcoeff[0,1] = 0
+	tcoeff[5] = 0
+	C1S = dsgnmBad2_MTHR(tcoeff, x)
+end
 
 function fitImageC1S(wave initial_coeff, wave src_image, [ variable offset ])
 	
