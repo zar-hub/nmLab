@@ -170,9 +170,15 @@ function fitC1S_comp(coeff, src, [res, wait, dbg])
 	FuncFit/Q/N=2 dsgnmBas_MTHR coeff, src
 end
 
+function updateAndSleep(variable t)
+	if(t > 0)
+		doupdate
+		sleep/b/s t
+	endif
+end
 
 
-function fitC1S_CO(coeff, src, [res, wait, dbg])
+function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
 	// Expects an open graph to plot the fit process to.
 	// Data is appended to default axis names, so one should 
 	// leave them for this function to handle and plot to other 
@@ -186,12 +192,17 @@ function fitC1S_CO(coeff, src, [res, wait, dbg])
 	
 	wave coeff, src, res
 	int wait, dbg
+	variable sleepTime
 	
 	duplicate/o src C1S, CO, mask
-	duplicate/free coeff tcoeff
+	duplicate/free coeff tcoeff startingCoeff delta
 	
 	if(paramisDefault(res))
 		duplicate/o src res
+	endif
+	
+	if (paramIsDefault(sleepTime))
+		sleepTime = 0.2
 	endif
 
 	// plot stuff in case wait is true
@@ -216,23 +227,36 @@ function fitC1S_CO(coeff, src, [res, wait, dbg])
 	ModifyGraph hbFill(CO)=2, plusRGB(CO)=(1,34817,52428,16384), usePlusRGB(CO)=1
 	ModifyGraph mode(C1S)=7,lsize(C1S)=1.3,rgb(C1S)=(36873,14755,58982)
 	ModifyGraph hbFill(C1S)=2,plusRGB(C1S)=(36873,14755,58982,16384), usePlusRGB(C1S)=1
+	updateAndSleep(sleepTime)
 	
 	if(!paramisDefault(wait))
 		return 0
 	endif
 	
 	execute "mask(-285.76, -282) = 0"
-	Make/O/T/free constrains={"K4 > 0.01", "K6 < -286.4", "K6 > -287.6", "K3 > 0.01"}
-	string hold="0011100"
+	Make/O/T/free constrains={\
+		"K2 > 0.08",\
+		"K2 < 0.14",\
+		"K3 > 0.24",\
+		"K4 > 0.17",\
+		"K4 < 0.25",\
+		"K6 < -286.4",\
+		"K6 > -287.6"\
+	}
+	string hold="0000000"
 	// try to fit only position and intensity
-	FuncFit/Q/N=2/h=hold Dsgn_MTHR coeff[0,6] src /M=mask// /c=constrains
+	FuncFit/Q/N=0/h=hold Dsgn_MTHR coeff[0,6] src /M=mask/c=constrains
+	CO = Dsgn_MTHR(tcoeff, x)
+	updateAndSleep(sleepTime)
 	
-	if(coeff[5] < 10) // no peak found, so hold the intensity to zero
-		coeff[5] = 0
+	
+	if(coeff[5] < 14) // no peak found, so hold the intensity to zero
+		coeff[5] = 0.1
 		hold = "001111111101"
 	else // peak found, so feel free to keep fitting it
-		FuncFit/Q/N=2 Dsgn_MTHR coeff[0,6] src /M=mask/c=constrains
+		FuncFit/Q/N=0 Dsgn_MTHR coeff[0,6] src /M=mask/c=constrains
 		hold = "001110111101"	
+		
 	endif
 	
 	tcoeff = coeff
@@ -240,12 +264,23 @@ function fitC1S_CO(coeff, src, [res, wait, dbg])
 	tcoeff[0,6] = coeff[p]
 	CO = Dsgn_MTHR(tcoeff, x)
 	C1S = src - CO
+	updateAndSleep(sleepTime)
 	
 	// only fit C1S
 	FuncFit/Q/N=2 dsgnnb_MTHR coeff[7,11], C1S
+	updateAndSleep(sleepTime)
+	
+	// allow lineshape parameter to vary only by 10 %
+	//make/free toVarySlowly = {2,3,4,7,8,9}
+	make/free toVarySlowly = {2,3,4,6,7,8,9,11}
+	delta =  (coeff - startingCoeff) * 0.1
+	for(int i : toVarySlowly)
+		coeff[i] = startingCoeff[i] + delta[i]
+	endfor
 	
 	// fit both
 	FuncFit/h=hold/Q/N=2 dsgnmBad2_MTHR coeff src
+	
 	
 	// update stuff again
 	removefromGraph mask
@@ -268,8 +303,6 @@ function prepareFolder(wave initial_coeff, wave image)
 	string folderName = name + "_FOLDER"
 	string imagePath, initialCoeffPath
 	
-	
-	DFREF saveDFR = GetDataFolderDFR()			// Save
 	// ----------- ORDER HERE MATTERS -----------
 	// create folder if not exists
 	if(!dataFolderExists(folderName))
@@ -279,19 +312,10 @@ function prepareFolder(wave initial_coeff, wave image)
 	// duplicate the image inside the folder
 	sprintf imagePath, "root:%s:%s", folderName, name
 	sprintf initialCoeffPath, "root:%s:%s", folderName, "initial_coeff"
-	print "saving to folder", imagePath
+	print "saving to folder", folderName
 	duplicate/o image, $imagePath
 	duplicate/o initial_coeff, $initialCoeffPath
 	
-	// go into the folder and
-	// create other waves 
-	setDataFolder $folderName
-	wave image = $name
-	wave fit = copy_append(image, "_FIT")
-	wave coeff = copy_append_coeff(image, initial_coeff, "_COEFF") 
-	wave sigma = new_append_coeff(image, initial_coeff, "_SIGMA")
-	// --------- END ORDER HERE MATTERS ----------
-	SetDataFolder saveDFR							// and restore
 end
 
 function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
@@ -310,9 +334,9 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
 	
 	// Initialize waves
 	wave image = $name
-	wave fit = $(name + "_FIT")
-	wave coeff = $(name + "_COEFF") 
-	wave sigma = $(name + "_SIGMA")
+	wave fit = copy_append(image, "_FIT")
+	wave coeff = copy_append_coeff(image, initial_coeff, "_COEFF") 
+	wave sigma = new_append_coeff(image, initial_coeff, "_SIGMA")
 	string gName, wname, tboxName
 	variable i, N, j
    string num, trace
@@ -320,15 +344,17 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
    // set def params
    N = dimsize(image, 1)
    if(paramisDefault(start))
-   		start = 0
+   	start = 0
    endif
 	if(paramisDefault(stop))
-   		stop = N
+   	stop = N
+   else 
+   	stop = min(stop, N)
    endif
 	
 	// temp graph helpers
 	duplicate/o initial_coeff slice_coeff
-	duplicate/o/rmd=[][0] image, slice, slice_fit
+	duplicate/o/rmd=[][start] image, slice, slice_fit
 	redimension/n=(-1,0) slice, slice_fit
 	
 	// CREATE PANEL
@@ -366,7 +392,7 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
 		MultiThreadingControl setMode = 8
 	endif
 	
-   for (i = start; (i < N) & (i < stop); i++)   	
+   for (i = start; i < stop; i++)   	
    	
    	// load image slice into the waves
    	slice = image[p][i]
@@ -374,44 +400,37 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
    	
    	setactiveSubwindow #sliceFit
    	removefromGraph/all
+   	fitC1S_CO(slice_coeff, slice, res=slice_fit)
+   	//fitC1S_comp(slice_coeff, slice, res=slice_fit)
    	
-   	// fitC1S_CO(slice_coeff, slice, res=slice_fit)
-   	
-   	fitC1S_comp(slice_coeff, slice, res=slice_fit)
-   	
-   	// save fit coeffs
+   	// save fit results
    	coeff[][i] = slice_coeff[p]
-   	wave w_sigma = $"W_sigma"
+    	fit[][i] = slice_fit[p]
+    	wave w_sigma = $"W_sigma"
     	sigma[][i] = w_sigma[p] // default sigma wave used by FuncFit
+    	
+    	// update next coeff and save errors
+    	if(i < N - 1)
+    		coeff[][i + 1] = coeff[p][i]
+    	endif
    	
-   	// display fit results
+   	// display fit results in tbox and terminal
    	replacetext/n=$tboxName "\f01 Lineshape : DSGN \f00"
 		//addEntriesToTBOX(tboxName, coeff, sigma, i=i)
 		printcoeff(slice_coeff)
     	setactiveSubwindow ##
     		
-   	// update next coeff and save errors
-    	if(i < N - 1)
-    		coeff[][i + 1] = coeff[p][i]
-    	endif
-    	
-    	// make a nice graph
-    	num = "#" + num2str(i)
-    	
-    	// ?
-    	slice = image[p][i]
-    	//slice_fit = dsgnmBad2_MTHR(slice_coeff, x)
-    	fit[][i] = slice_fit[p]
+    	// update the slices on image graph
+    	setactiveSubwindow #image
     	
     	if(!paramisDefault(offset))
     		fit[][i] = fit[p][i] + offset * (N - i)
     	endif
     	
-    
-    	setactiveSubwindow #image
+    	num = "#" + num2str(i)
     	appendtograph fit[][i]/tn=$("fit_slice" + num)
     	
-    	if (i > 0)
+    	if (i > start)
     		num = "#" + num2str(i - 1)
     		trace = "'fit_slice" + num + "'"
     		ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
@@ -430,7 +449,6 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
 	num = "#" + num2str(i - 1)
    trace = "'fit_slice" + num + "'"
 	ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
-	
 	removeFromGraph slice, slice_fit
 	setactiveSubwindow ##
     

@@ -144,7 +144,7 @@ function printCoeff(coeff)
 	for(i = 0; i < N; i++)
 		
 		sprintf app, "%.3f", coeff[i]
-		app = padString(app, 8, 0x20) //0x20 is a space
+		app = padString(app, 10, 0x20) //0x20 is a space
 		scoeff += app
 	endfor
 	
