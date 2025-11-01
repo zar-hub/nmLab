@@ -85,15 +85,24 @@ function/wave copy_append_coeff(src, coeff, s)
 	string name = nameofwave(src)
 	string new = name + s
 	
-	duplicate/o coeff, $new 	
+	duplicate/o coeff, $new 
+	wave wnew = $new	
 	
 	// if 2d wave resize to 2d
 	if(dimsize(src, 1))
 		variable cols = dimsize(src, 1)
-		redimension/n=(-1, cols) $new
+		redimension/n=(-1, cols) wnew
+		
+		// all the extended columns have zeros
+		// so copy the initial coeffs
+		variable i
+		for(i=0;i<cols;i++)
+			wnew[][i] = coeff[p]
+		endfor
+	
 	endif
 	
-	return $new
+	return wnew
 end
 
 // === IMAGING ===
@@ -119,7 +128,28 @@ function printInfo(w)
 	printf "%s \t %d \t\t %d \t\t %d \r", "Cols", dimSize(w, 1), dimOffset(w, 1), dimDelta(w, 1)
 end
 
+function printCoeff(coeff)
+	wave coeff
+	int i, N
+	string scoeff, app
 
+	N = dimSize(coeff, 0)	
+	scoeff = ""
+	
+	// add label
+	//app = getDimLabel(coeff, 0, i)
+	//app = padString(app, 12, 0x20) //0x20 is a space
+	//scoeff += app
+	
+	for(i = 0; i < N; i++)
+		
+		sprintf app, "%.3f", coeff[i]
+		app = padString(app, 8, 0x20) //0x20 is a space
+		scoeff += app
+	endfor
+	
+	print scoeff
+end
 
 function addEntriesToTBOX(tbox, coeff, err, [i])
 	string tbox
