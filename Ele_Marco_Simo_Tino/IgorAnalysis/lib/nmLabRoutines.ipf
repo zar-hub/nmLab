@@ -1,4 +1,5 @@
 #include ":utils"
+#include ":FitControlPackage"
 
 
 
@@ -178,6 +179,8 @@ function updateAndSleep(variable t)
 end
 
 
+
+
 function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
 	// Expects an open graph to plot the fit process to.
 	// Data is appended to default axis names, so one should 
@@ -238,8 +241,8 @@ function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
 		"K2 > 0.08",\
 		"K2 < 0.14",\
 		"K3 > 0.24",\
-		"K4 > 0.17",\
-		"K4 < 0.25",\
+		"K4 > 0.18",\
+		"K4 < 0.26",\
 		"K6 < -286.4",\
 		"K6 > -287.6"\
 	}
@@ -318,6 +321,7 @@ function prepareFolder(wave initial_coeff, wave image)
 	
 end
 
+
 function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
 
 	wave initial_coeff, src_image
@@ -326,19 +330,29 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
 	
 	redimension/d initial_coeff 	// make sure to have double element coeff wave	
 		
-	// Prepare working folder
+	// Initialize folders
+	newDataFolder 
+	newDataFolder options
+	newDataFolder internals
+	newDataFolder inputs
+	
 	string name = nameOfWave(src_image)
 	string folderName = name + "_FOLDER"
 	prepareFolder(initial_coeff, src_image)
 	setDataFolder $folderName
 	
-	// Initialize waves
-	wave image = $name
+	
+	// Initialize global variables
+	nvar i = $GetGlobalVar("G_vSliceCounter")
+	nvar N = $GetGlobalVar("G_vNumSlices")
 	wave fit = copy_append(image, "_FIT")
+	wave resid = copy_append(image, "_RES")
 	wave coeff = copy_append_coeff(image, initial_coeff, "_COEFF") 
 	wave sigma = new_append_coeff(image, initial_coeff, "_SIGMA")
+	
+	wave image = $name
 	string gName, wname, tboxName
-	variable i, N, j
+	variable j
    string num, trace
    
    // set def params
@@ -351,6 +365,8 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
    else 
    	stop = min(stop, N)
    endif
+   
+   i = start
 	
 	// temp graph helpers
 	duplicate/o initial_coeff slice_coeff
@@ -358,41 +374,60 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
 	redimension/n=(-1,0) slice, slice_fit
 	
 	// CREATE PANEL
-	newpanel/W=(0,0,750,450) as name + " Panel"
+	newpanel/W=(0,0,850,500) as name + " Panel"
 	KillWindow  $( name + "Panel" )
 	DoWindow/C $( name + "Panel" )
 	gName = winname(0, 64)
    printf "Created Panel %s\n", gName
    
+   newpanel/W=(0,0,300,500)/ext=0/host=#/n=FitControlPanel as "Fit Control"
+   initFitControlPanel(slice_coeff)
+   setactiveSubwindow ##
+   
 	// Create the Graphs
-   display/host=#/n=sliceFit/w=(0,0,0.60,1)	// SLICE FIT GRAPH
+	// 1) SLICE FIT GRAPH
+   display/host=#/n=sliceFit/w=(0,0,0.50,0.8)	
    appendToGraph slice, slice_fit
    slice_fit = DsgnmBad2_MTHR(initial_coeff, x)
  	tboxName = "CF_" + wname					// Put the box up left and
    TextBox/C/N=$tboxName/A=LT/X=2/Y=2  // add two percent of padding to X and Y
    setactiveSubwindow ##
-   
-   display/host=#/n=image/w=(0.61,0,1,1)		// IMAGE SLICES GRAPH
+   // 2) IMAGE SLICES GRAPH
+   display/host=#/n=image/w=(0.50,0,0.75,0.8)		
    appendToGraph slice, slice_fit
    setactiveSubwindow ##
-    
-   // check if starting values are correct
-   variable didAbort = 0
-   didAbort = UserPauseCheck(gname, 5)
-   if (didAbort)
-   	// go back to root
-   	setdataFolder "root:"
-   	return -1
-   endif
-    
+   // 3) RESID GRAPH
+   display/host=#/n=resid/w=(0.75,0,1,0.8)		
+   setactiveSubwindow ##
+   
+   // UI
+   SetActiveSubwindow #FitControlPanel
+   setactiveSubwindow ##
+end
+
+function FitLoop(string sImage)
+
+	// Initialize global variables
+	nvar i 		= $GetGlobalVar("vSliceCounter")
+	nvar N   	= $GetGlobalVar("vNumSlices")
+	nvar start 	= $GetGlobalVar("vStart")
+	nvar stop 	= $GetGlobalVar("vStop")
+	nvar offset = $GetGlobalVar("vOffset")
+	wave fit 	= $GetGLobalWave(sImage + "_FIT")
+	wave resid 	= $GetGLobalWave(sImage + "_RES")
+	wave coeff 	= $GetGLobalWave(sImage + "_COEFF") 
+	wave sigma 	= $GetGLobalWave(sImage + "_SIGMA")
+	
+	// initialize locals
+	wave slice, image, slice_coeff, slice_fit
+	string tBoxName, num, trace
+	
 	// loop trough slices
 	printf "looping through %d slices\n", N
 	printf "starting at %d ending at %d\n", start, min(stop, N)
-	if(!paramisDefault(overclock))
-		MultiThreadingControl setMode = 8
-	endif
 	
-   for (i = start; i < stop; i++)   	
+	
+   for (i = start; i < stop; i = i+1)   	
    	
    	// load image slice into the waves
    	slice = image[p][i]
@@ -408,6 +443,7 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
     	fit[][i] = slice_fit[p]
     	wave w_sigma = $"W_sigma"
     	sigma[][i] = w_sigma[p] // default sigma wave used by FuncFit
+    	resid[][i] = slice[p] - slice_fit[p]
     	
     	// update next coeff and save errors
     	if(i < N - 1)
@@ -421,28 +457,27 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
     	setactiveSubwindow ##
     		
     	// update the slices on image graph
-    	setactiveSubwindow #image
-    	
-    	if(!paramisDefault(offset))
-    		fit[][i] = fit[p][i] + offset * (N - i)
-    	endif
-    	
     	num = "#" + num2str(i)
-    	appendtograph fit[][i]/tn=$("fit_slice" + num)
+    	setactiveSubwindow #image	
     	
+    	appendtograph fit[][i]/tn=$("fit_slice" + num)
     	if (i > start)
     		num = "#" + num2str(i - 1)
     		trace = "'fit_slice" + num + "'"
     		ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
     	endif
+    	setactiveSubwindow ##
     	
+    	setactiveSubwindow #resid
+    	appendtograph resid[][i]/tn=$("resid_slice" + num)
+    	if (i > start)
+    		num = "#" + num2str(i - 1)
+    		trace = "'resid_slice" + num + "'"
+    		ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
+    	endif
     	setactiveSubwindow ##
     	doupdate 
 	endfor
-	
-	if(!paramisDefault(overclock))
-		MultiThreadingControl setMode = 1
-	endif
 	
 	// one last time 
 	setactiveSubwindow #image

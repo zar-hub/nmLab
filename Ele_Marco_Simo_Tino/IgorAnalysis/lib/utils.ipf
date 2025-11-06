@@ -27,12 +27,41 @@ function displace(src, dx)
 	setscale/p x, offset, delta, "", src
 end
 
-function/wave new_append(src, s)
+Function/S GetGlobalVar(varName, [folder])
+	string varName
+	DFREF folder
+   NVAR/Z globalVar = $varName
+   
+   if(!NVAR_Exists(globalVar))
+   	variable/G $varName
+   endif
+ 	
+   return varName
+End
+
+Function/S GetGlobalWave(wavName)
+	string wavName
+   wave/Z globalWave = $wavName
+   
+   if(!WaveExists(globalWave))
+   	make $wavName
+   endif
+   
+   return wavName 
+End
+
+
+function/wave new_append(src, s, [folder])
 	// creates a new empty wave 
 	// with the same size as src
 	// named src_name + s
 	wave src
 	string s
+	DFREF folder
+	
+	if(paramisdefault(folder))
+		folder = getdataFolderDFR()
+	endif
 	
 	string name = nameofwave(src)
 	string new = name + s
