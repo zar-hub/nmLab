@@ -194,7 +194,7 @@ function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
 	int wait, dbg
 	variable sleepTime
 	
-	duplicate/o src C1S, CO, mask
+	duplicate/o src C1S, CO, mask, bg
 	duplicate/free coeff tcoeff startingCoeff delta
 	
 	if(paramisDefault(res))
@@ -202,7 +202,7 @@ function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
 	endif
 	
 	if (paramIsDefault(sleepTime))
-		sleepTime = 0.2
+		sleepTime = 0
 	endif
 
 	// plot stuff in case wait is true
@@ -243,27 +243,40 @@ function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
 		"K6 < -286.4",\
 		"K6 > -287.6"\
 	}
-	string hold="0000000"
+	Make/O/T/free co_constrains={\
+		"K4 > 0.17",\
+		"K4 < 0.25",\
+		"K6 < -286.4",\
+		"K6 > -287.6"\
+	}
+	
+	// prepare for fitting
+	tcoeff = coeff
+	tcoeff[10] = 0
+	bg = dsgnmBad2_MTHR(tcoeff, x)
+	updateAndSleep(sleepTime)
+	
 	// try to fit only position and intensity
-	FuncFit/Q/N=0/h=hold Dsgn_MTHR coeff[0,6] src /M=mask/c=constrains
-	CO = Dsgn_MTHR(tcoeff, x)
+	string hold="001100011111"
+	FuncFit/Q/N=0/h=hold dsgnmBad2_MTHR tcoeff[0,6] src /M=mask/c=co_constrains
+	bg = dsgnmBad2_MTHR(tcoeff, x)
+	coeff[0,6] = tcoeff[p]	// save coeff
 	updateAndSleep(sleepTime)
 	
 	
-	if(coeff[5] < 14) // no peak found, so hold the intensity to zero
+	if(coeff[5] < 8) // no peak found, so hold the intensity to zero
 		coeff[5] = 0.1
 		hold = "001111111101"
 	else // peak found, so feel free to keep fitting it
 		FuncFit/Q/N=0 Dsgn_MTHR coeff[0,6] src /M=mask/c=constrains
 		hold = "001110111101"	
-		
 	endif
 	
 	tcoeff = coeff
 	tcoeff[10] = 0
 	tcoeff[0,6] = coeff[p]
-	CO = Dsgn_MTHR(tcoeff, x)
-	C1S = src - CO
+	bg = Dsgn_MTHR(tcoeff, x)
+	C1S = src - bg
 	updateAndSleep(sleepTime)
 	
 	// only fit C1S
@@ -272,8 +285,9 @@ function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
 	
 	// allow lineshape parameter to vary only by 10 %
 	//make/free toVarySlowly = {2,3,4,7,8,9}
+	variable percDelta = 0.2
 	make/free toVarySlowly = {2,3,4,6,7,8,9,11}
-	delta =  (coeff - startingCoeff) * 0.1
+	delta =  (coeff - startingCoeff) * percDelta
 	for(int i : toVarySlowly)
 		coeff[i] = startingCoeff[i] + delta[i]
 	endfor
@@ -281,9 +295,8 @@ function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
 	// fit both
 	FuncFit/h=hold/Q/N=2 dsgnmBad2_MTHR coeff src
 	
-	
 	// update stuff again
-	removefromGraph mask
+	removefromGraph mask, bg
 	res = dsgnmBad2_MTHR(coeff, x)
 	tcoeff = coeff
 	tcoeff[0,1] = 0
