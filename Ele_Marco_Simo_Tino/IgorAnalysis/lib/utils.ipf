@@ -1,4 +1,26 @@
 // === UTILITY FUNCTIONS ===
+function updateAndSleep(variable t)
+	if(t > 0)
+		doupdate
+		sleep/b/s t
+	endif
+end
+
+
+function/s sBWO(s1, s2)
+	// string Bit Wise Or
+	string s1, s2
+	int N = min(strlen(s1), strlen(s2))
+	int i
+	
+	for(i=0;i<N;i++)
+		s1[i] = num2str(str2num(s1[i]) | str2num(s2[i]))
+	endfor
+	
+	s1 = s1[0, N-1]
+	return s1
+end
+
 function normalize(src)
 	wave src
 	string dup_name = "Norm_" + nameofwave(src)

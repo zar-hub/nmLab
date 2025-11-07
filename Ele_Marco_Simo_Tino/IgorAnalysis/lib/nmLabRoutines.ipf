@@ -118,31 +118,13 @@ function fitC1S_simple(coeff, src, [res])
 	appendtoGraph src, res
 end
 
-
-
-function fitC1S_comp(coeff, src, [res, wait, dbg])
-	// Expects an open graph to plot the fit process to.
-	// Data is appended to default axis names, so one should 
-	// leave them for this function to handle and plot to other 
-	// axis in the same graph.
-	wave coeff, src, res
-	int wait, dbg
-	string name = nameofWave(src)
+function plotPeaksC1S_comp(coeff, res)
+	wave coeff, res
+	wave C1 = $"C1"
+	wave C2 = $"C2"
+	wave C3 = $"C3"
 	
-	if(paramisDefault(res))
-		duplicate/o src res
-	endif
-	
-	if(!paramisDefault(dbg))
-		display 			// enable when debugging
-	endif
-	
-	duplicate/o src, C1, C2, C3
-	appendtoGraph src, res, C1, C2, C3
 	duplicate/free coeff tcoeff
-	ModifyGraph lsize(res)=1.3,rgb(res)=(1,16019,65535)
-	ModifyGraph lsize(C1)=1.3,rgb(C1)=(0,65535,0),lsize(C2)=1.3,rgb(C2)=(65535,43690,0),lsize(C3)=1.3,rgb(C3)=(65535,0,52428)
-	ModifyGraph mode(C1)=7,usePlusRGB(C1)=1,hbFill(C1)=2,plusRGB(C1)=(3,52428,1,16384),mode(C2)=7,usePlusRGB(C2)=1,hbFill(C2)=2,plusRGB(C2)=(52428,34958,1,16384),mode(C3)=7,usePlusRGB(C3)=1,hbFill(C3)=2,plusRGB(C3)=(52428,1,41942,16384)
 	
 	// components
 	tcoeff = coeff
@@ -160,23 +142,126 @@ function fitC1S_comp(coeff, src, [res, wait, dbg])
 	tcoeff[5] = 0
 	tcoeff[7] = 0
 	C3 = dsgnmBas_MTHR(tcoeff, x)
-	
 	res = dsgnmBas_MTHR(coeff, x)
+end
+
+function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
+	// Expects an open graph to plot the fit process to.
+	// Data is appended to default axis names, so one should 
+	// leave them for this function to handle and plot to other 
+	// axis in the same graph.
+	wave coeff, src, res
+	int wait, dbg
+	variable sleepTime
+	string name = nameofWave(src)
+	
+	if(paramisDefault(res))
+		duplicate/o src res
+	endif
+	
+	if(!paramisDefault(dbg))
+		display 			// enable when debugging
+	endif
+	
+	if(paramisDefault(sleepTime))
+		sleepTime = 0.1
+	endif
+	
+	duplicate/o src, C1, C2, C3
+	appendtoGraph src, res, C1, C2, C3
+	duplicate/free coeff tcoeff delta startingCoeff
+	ModifyGraph lsize(res)=1.3,rgb(res)=(1,16019,65535)
+	ModifyGraph lsize(C1)=1.3,rgb(C1)=(0,65535,0),lsize(C2)=1.3,rgb(C2)=(65535,43690,0),lsize(C3)=1.3,rgb(C3)=(65535,0,52428)
+	ModifyGraph mode(C1)=7,usePlusRGB(C1)=1,hbFill(C1)=2,plusRGB(C1)=(3,52428,1,16384),mode(C2)=7,usePlusRGB(C2)=1,hbFill(C2)=2,plusRGB(C2)=(52428,34958,1,16384),mode(C3)=7,usePlusRGB(C3)=1,hbFill(C3)=2,plusRGB(C3)=(52428,1,41942,16384)
+	textBox/A=RT/n=infoTBox "Initial values"
+	plotPeaksC1S_comp(coeff, res)
+	updateAndSleep(sleepTime)
 	
 	if(!paramisDefault(wait))
 		return 0
 	endif
+	
+	// FITTING PROCEDURE
+	// 1) Evaluate peaks presence without lineshape
+	// 2) Set to zero "bad" peaks
+	// 3) Fit lineshape with weight factor
+	// 4) Optimize bg and intensities
+	
+	Make/O/T/free peakConstrains={\
+		"K6 > -284.6",\
+		"K6 < -284.2",\
+		"K8 > -284.1",\
+		"K8 < -283.7",\
+		"K10 > -283.7",\
+		"K10 < -283.3"\
+	}
+	
+	// 1) feel free to fit all peaks, but not lineshapes
+	string hold = "000111000000"
+	FuncFit/Q/N=2/h=hold dsgnmBas_MTHR coeff, src
+	replaceText "lineshape fixed, optimized intensity"
+	plotPeaksC1S_comp(coeff, res)
+	updateAndSleep(sleepTime)
 
-	FuncFit/Q/N=2 dsgnmBas_MTHR coeff, src
-end
-
-function updateAndSleep(variable t)
-	if(t > 0)
-		doupdate
-		sleep/b/s t
+	// 2) find peaks: if too small remove them
+	// optimizing intensity, position and bg
+	string holdPeaks = "00000000000"
+	variable thresholdIntensity = 10
+	int flagRemoved = 0
+	
+	if(coeff[5] < thresholdIntensity || abs(coeff[6]- startingCoeff[6]) > 0.3) // no peak found, so hold the intensity to zero
+		coeff[5] = 0.1
+		coeff[6] = startingCoeff[6]
+		holdPeaks = sBWO(holdPeaks, "00000110000") 
+		flagRemoved++
 	endif
-end
+	if(coeff[7] < thresholdIntensity || abs(coeff[8]- startingCoeff[8]) > 0.3) // no peak found, so hold the intensity to zero
+		coeff[7] = 0.1
+		coeff[8] = startingCoeff[8]
+		holdPeaks = sBWO(holdPeaks, "00000001100") 
+		flagRemoved++
+	endif
+	if(coeff[9] < thresholdIntensity || abs(coeff[10]- startingCoeff[10]) > 0.3) // no peak found, so hold the intensity to zero
+		coeff[9] = 0.1
+		coeff[10] = startingCoeff[10]
+		holdPeaks = sBWO(holdPeaks, "00000000011")
+		flagRemoved++ 
+	endif
+	
+	if (flagRemoved)
+		replaceText "removed small peaks"
+		plotPeaksC1S_comp(coeff, res)
+		updateAndSleep(sleepTime)
+		// 3) Fit lineshapes and apply weight factor
+		FuncFit/Q/N=2/h=holdPeaks dsgnmBas_MTHR coeff, src
+		replaceText "optimized lineshape after removal"
+		plotPeaksC1S_comp(coeff, res)
+		updateAndSleep(sleepTime)
+	endif
+	
+	// toVarySlowly parameters can change only of percDelta
+	// at each iteration
+	make/free toVarySlowly = {2,3,4,6,8,10}
+	variable percDelta = 0.15
+	delta =  (coeff - startingCoeff) * percDelta
+	for(int i : toVarySlowly)
+		coeff[i] = startingCoeff[i] + delta[i]
+	endfor
+	replaceText "tuned back lineshape by 15 %"
+	plotPeaksC1S_comp(coeff, res)
+	updateAndSleep(sleepTime)
+	
+	// 4) Fit one last time to optimize the intensities 
+	// and positions
+	hold = "00111000000"
+	hold = sBWO(hold, holdPeaks)
+	FuncFit/Q/N=2/h=holdPeaks dsgnmBas_MTHR coeff, src
+	replaceText "optimized intensity and position, shape locked "
+	plotPeaksC1S_comp(coeff, res)
+	updateAndSleep(sleepTime)
+	TextBox/K/N=infoTBox
 
+end
 
 function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
 	// Expects an open graph to plot the fit process to.
@@ -331,10 +416,11 @@ function prepareFolder(wave initial_coeff, wave image)
 	
 end
 
-function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
+function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, overclock])
 
 	wave initial_coeff, src_image
 	int start, stop, overclock
+	string fitType
 	variable offset
 	
 	redimension/d initial_coeff 	// make sure to have double element coeff wave	
@@ -380,7 +466,17 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
 	// Create the Graphs
    display/host=#/n=sliceFit/w=(0,0,0.60,1)	// SLICE FIT GRAPH
    appendToGraph slice, slice_fit
-   slice_fit = DsgnmBad2_MTHR(initial_coeff, x)
+   
+   if(cmpstr(fitType, "multiComp") == 0)
+   	fitC1S_comp(slice_coeff, slice, res=slice_fit, wait = 1)
+   elseif(cmpstr(fitType, "co") == 0)
+   	fitC1S_CO(slice_coeff, slice, res=slice_fit, wait = 1)
+   else
+   	Printf "Type : %s not supported...\n",fitType
+   	i = N // do not enter the loop
+   endif
+   
+   //slice_fit = DsgnmBad2_MTHR(initial_coeff, x)
  	tboxName = "CF_" + wname					// Put the box up left and
    TextBox/C/N=$tboxName/A=LT/X=2/Y=2  // add two percent of padding to X and Y
    setactiveSubwindow ##
@@ -388,7 +484,8 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
    display/host=#/n=image/w=(0.61,0,1,1)		// IMAGE SLICES GRAPH
    appendToGraph slice, slice_fit
    setactiveSubwindow ##
-    
+   
+   doUpdate
    // check if starting values are correct
    variable didAbort = 0
    didAbort = UserPauseCheck(gname, 5)
@@ -406,15 +503,21 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
 	endif
 	
    for (i = start; i < stop; i++)   	
-   	
    	// load image slice into the waves
    	slice = image[p][i]
    	slice_coeff = coeff[p][i]
    	
    	setactiveSubwindow #sliceFit
    	removefromGraph/all
-   	fitC1S_CO(slice_coeff, slice, res=slice_fit)
-   	//fitC1S_comp(slice_coeff, slice, res=slice_fit)
+   	
+   	if(cmpstr(fitType, "multiComp") == 0)
+   		fitC1S_comp(slice_coeff, slice, res=slice_fit)
+   	elseif(cmpstr(fitType, "co") == 0)
+   		fitC1S_CO(slice_coeff, slice, res=slice_fit)
+   	else
+   		Printf "Type : %s not supported...\n", fitType
+   		break // from loop
+   	endif
    	
    	// save fit results
    	coeff[][i] = slice_coeff[p]
@@ -467,4 +570,34 @@ function fitImageC1S(initial_coeff, src_image, [start, stop, offset, overclock])
     
    // go back to root
    setdataFolder "root:"
+end
+
+function calibrateImageFLSCNO(wave image, wave FL, wave current)
+	// calibrates FL of image and sets the correct
+	// corrects SCaling
+	// NOrmalizes intensity
+	// scaling
+	
+	printf "Calibrating %s with FL %s\n", nameofWave(image), nameofWave(FL)
+
+	wave coeff = $"W_coef"
+	variable xhalf = coeff[2]
+	variable delta = dimdelta(image, 0)
+	variable offset = dimoffset(image,0)
+	
+	if(offset < 0)
+		print "Something is not right..."
+		print "offset is < 0, aborting\n"
+		return -1
+	endif
+	
+	display FL
+	CurveFit/M=1/W=0 Sigmoid, FL/D
+	SetScale/P x -(offset - xhalf),-delta,"eV", image
+	// normalize for current in nA
+	variable vCurr = mean(current) / 1e-9
+	image = image / vCurr
+	
+	printf "calibrated for xhalf : %.3f, curr : %.3f nA\n", xhalf, vCurr
+	sliceImage(image, 50)
 end
