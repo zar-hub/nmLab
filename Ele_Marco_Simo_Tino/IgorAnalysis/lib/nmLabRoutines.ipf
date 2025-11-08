@@ -164,7 +164,7 @@ function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	endif
 	
 	if(paramisDefault(sleepTime))
-		sleepTime = 0.1
+		sleepTime = 0
 	endif
 	
 	duplicate/o src, C1, C2, C3
@@ -188,16 +188,33 @@ function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	// 4) Optimize bg and intensities
 	
 	Make/O/T/free peakConstrains={\
-		"K6 > -284.6",\
-		"K6 < -284.2",\
-		"K8 > -284.1",\
-		"K8 < -283.7",\
-		"K10 > -283.7",\
-		"K10 < -283.3"\
+		"K6 > -284.8",\
+		"K6 < -284.0",\
+		"K8 > -283.9",\
+		"K8 < -283.9",\
+		"K10 > -283.9",\
+		"K10 < -283.1"\
+	}
+	Make/O/T/free LSConstrains={\
+		"K2 > 0.1",\
+		"K2 < 0.3",\
+		"K3 > 0.05",\
+		"K3 < 25",\
+		"K4 > 0.1",\
+		"K4 < 0.6",\
+		"K5 > 0.05",\
+		"K7 > 0.05",\
+		"K9 > 0.05"\
+	}
+	Make/O/T/free IntensityConstrains={\
+		"K5 > 0.05",\
+		"K7 > 0.05",\
+		"K9 > 0.05"\
 	}
 	
 	// 1) feel free to fit all peaks, but not lineshapes
-	string hold = "000111000000"
+	// keep gaussian free... do not overconstrain
+	string hold = "00110010101"
 	FuncFit/Q/N=2/h=hold dsgnmBas_MTHR coeff, src
 	replaceText "lineshape fixed, optimized intensity"
 	plotPeaksC1S_comp(coeff, res)
@@ -206,59 +223,75 @@ function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	// 2) find peaks: if too small remove them
 	// optimizing intensity, position and bg
 	string holdPeaks = "00000000000"
-	variable thresholdIntensity = 10
+	variable thresholdIntensity = 7
+	variable thresholdPosDelta = 0.4
 	int flagRemoved = 0
 	
-	if(coeff[5] < thresholdIntensity || abs(coeff[6]- startingCoeff[6]) > 0.3) // no peak found, so hold the intensity to zero
+	if(coeff[5] < thresholdIntensity || abs(coeff[6]- startingCoeff[6]) > thresholdPosDelta) // no peak found, so hold the intensity to zero
 		coeff[5] = 0.1
 		coeff[6] = startingCoeff[6]
 		holdPeaks = sBWO(holdPeaks, "00000110000") 
 		flagRemoved++
 	endif
-	if(coeff[7] < thresholdIntensity || abs(coeff[8]- startingCoeff[8]) > 0.3) // no peak found, so hold the intensity to zero
+	if(coeff[7] < thresholdIntensity || abs(coeff[8]- startingCoeff[8]) > thresholdPosDelta) // no peak found, so hold the intensity to zero
 		coeff[7] = 0.1
 		coeff[8] = startingCoeff[8]
 		holdPeaks = sBWO(holdPeaks, "00000001100") 
 		flagRemoved++
 	endif
-	if(coeff[9] < thresholdIntensity || abs(coeff[10]- startingCoeff[10]) > 0.3) // no peak found, so hold the intensity to zero
+	if(coeff[9] < thresholdIntensity || abs(coeff[10]- startingCoeff[10]) > thresholdPosDelta) // no peak found, so hold the intensity to zero
 		coeff[9] = 0.1
 		coeff[10] = startingCoeff[10]
 		holdPeaks = sBWO(holdPeaks, "00000000011")
 		flagRemoved++ 
 	endif
 	
+	// fit lineshape
 	if (flagRemoved)
-		replaceText "removed small peaks"
-		plotPeaksC1S_comp(coeff, res)
-		updateAndSleep(sleepTime)
-		// 3) Fit lineshapes and apply weight factor
-		FuncFit/Q/N=2/h=holdPeaks dsgnmBas_MTHR coeff, src
-		replaceText "optimized lineshape after removal"
+		replaceText "removed some peaks"
 		plotPeaksC1S_comp(coeff, res)
 		updateAndSleep(sleepTime)
 	endif
 	
-	// toVarySlowly parameters can change only of percDelta
-	// at each iteration
-	make/free toVarySlowly = {2,3,4,6,8,10}
-	variable percDelta = 0.15
-	delta =  (coeff - startingCoeff) * percDelta
-	for(int i : toVarySlowly)
-		coeff[i] = startingCoeff[i] + delta[i]
-	endfor
-	replaceText "tuned back lineshape by 15 %"
+	// 3) Fit lineshapes and apply weight factor
+	hold = sBWO("11000010101", holdPeaks)
+	hold = "11000010101"
+	FuncFit/Q/N=2/h=hold dsgnmBas_MTHR coeff, src/c=LSConstrains
+	replaceText "optimized lineshape"
 	plotPeaksC1S_comp(coeff, res)
 	updateAndSleep(sleepTime)
 	
-	// 4) Fit one last time to optimize the intensities 
-	// and positions
-	hold = "00111000000"
+	// toVarySlowly parameters can change only of percDelta
+	// at each iteration
+	
+	delta =  (coeff - startingCoeff) 
+	coeff[2] = startingCoeff[2] + delta[2] * 0.03   // Lor
+	coeff[3] = startingCoeff[3] + delta[3] * 0.03 // asym
+	coeff[4] = startingCoeff[4] + delta[4] * 0.03  // Gau
+	
+	replaceText "tuned back lineshape"
+	plotPeaksC1S_comp(coeff, res)
+	updateAndSleep(sleepTime)
+	
+	// 4) Fit the positions
+	hold = "11111000000"
 	hold = sBWO(hold, holdPeaks)
-	FuncFit/Q/N=2/h=holdPeaks dsgnmBas_MTHR coeff, src
+	FuncFit/Q/N=2/h=hold dsgnmBas_MTHR coeff, src
 	replaceText "optimized intensity and position, shape locked "
 	plotPeaksC1S_comp(coeff, res)
 	updateAndSleep(sleepTime)
+	delta =  (coeff - startingCoeff) 
+	coeff[6] = startingCoeff[6] + delta[6] * 0.05   	// C1
+	coeff[8] = startingCoeff[8] + delta[8] * 0.05 		// C2
+	coeff[10] = startingCoeff[10] + delta[10] * 0.05  // C3
+	
+	// 5) Fit only bg and intensities
+	hold = "00111010101"
+	FuncFit/Q/N=2/h=hold dsgnmBas_MTHR coeff, src/c=IntensityConstrains
+	replaceText "optimized intensity and position, shape locked "
+	plotPeaksC1S_comp(coeff, res)
+	updateAndSleep(sleepTime)
+	
 	TextBox/K/N=infoTBox
 
 end
