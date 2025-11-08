@@ -12,13 +12,17 @@ function/s sBWO(s1, s2)
 	string s1, s2
 	int N = min(strlen(s1), strlen(s2))
 	int i
-	
+	variable n1, n2
+	string res = ""
+
 	for(i=0;i<N;i++)
-		s1[i] = num2str(str2num(s1[i]) | str2num(s2[i]))
+		n1 = str2num(s1[i])
+		n2 = str2num(s2[i])
+		res = res + num2str(n1 | n2)
+		//print i, n1, n2, n1 | n2
 	endfor
-	
-	s1 = s1[0, N-1]
-	return s1
+
+	return res
 end
 
 function normalize(src)
