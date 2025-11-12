@@ -41,6 +41,30 @@ function sliceImage(image, offset)
 	endfor
 end
 
+function plotCoeff(coeff)
+	wave coeff
+	variable rows = dimsize(coeff, 0)
+	variable cols = dimsize(coeff, 1)
+	duplicate/o coeff coeffImage
+	make/free/n=(cols) slice
+	
+	variable myMean, myStd, offset
+	
+	display
+	int i
+	
+	for(i = 0; i < rows; i++)
+		slice = coeffImage[i][p]
+		myMean = mean(slice)
+		myStd = sqrt(variance(slice))
+		print myMean, myStd
+		offset = 4 * i
+		coeffImage[i][] = (coeffImage[i][q] - myMean) / myStd + offset
+		
+		appendTograph coeffImage[i][]
+	endfor 
+	
+end
 
 
 Function UserPauseCheck(graphName, autoAbortSecs)
@@ -145,6 +169,22 @@ function plotPeaksC1S_comp(coeff, res)
 	res = dsgnmBas_MTHR(coeff, x)
 end
 
+function/s getBinStd(wave w)
+	variable N = sum(w)
+	variable delta = abs(dimDelta(w,0))
+	duplicate/o w, px, std
+	px = (w / N ) * (1 / delta)
+	std = sqrt(w * px * (1 - px))
+	return nameofWave(std)
+end
+
+function/s getWaveFromSubfolder(string name, [string folder])
+	
+	string pah
+	
+	//wave/z w = $(folder:name)
+end
+
 function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	// Expects an open graph to plot the fit process to.
 	// Data is appended to default axis names, so one should 
@@ -164,22 +204,29 @@ function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	endif
 	
 	if(paramisDefault(sleepTime))
-		sleepTime = 0
+		sleepTime = 1.5
 	endif
 	
-	duplicate/o src, C1, C2, C3
-	appendtoGraph src, res, C1, C2, C3
+	
+	duplicate/o src, C1, C2, C3, OC1, OC2, OC3
+	appendtoGraph src, res, C1, C2, C3, OC1, OC2, OC3
 	duplicate/free coeff tcoeff delta startingCoeff
 	ModifyGraph lsize(res)=1.3,rgb(res)=(1,16019,65535)
 	ModifyGraph lsize(C1)=1.3,rgb(C1)=(0,65535,0),lsize(C2)=1.3,rgb(C2)=(65535,43690,0),lsize(C3)=1.3,rgb(C3)=(65535,0,52428)
 	ModifyGraph mode(C1)=7,usePlusRGB(C1)=1,hbFill(C1)=2,plusRGB(C1)=(3,52428,1,16384),mode(C2)=7,usePlusRGB(C2)=1,hbFill(C2)=2,plusRGB(C2)=(52428,34958,1,16384),mode(C3)=7,usePlusRGB(C3)=1,hbFill(C3)=2,plusRGB(C3)=(52428,1,41942,16384)
 	textBox/A=RT/n=infoTBox "Initial values"
 	plotPeaksC1S_comp(coeff, res)
+	OC1 = C1
+	OC2 = C2
+	OC3 = C3
 	updateAndSleep(sleepTime)
 	
 	if(!paramisDefault(wait))
 		return 0
 	endif
+	
+	wave std = $getbinStd(src)
+	ErrorBars/L=0.5/Y=3 $nameofWave(src) Y,wave=(std,std)
 	
 	// FITTING PROCEDURE
 	// 1) Evaluate peaks presence without lineshape
@@ -211,7 +258,7 @@ function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	
 	// 1) feel free to fit all peaks, but not lineshapes
 	// keep gaussian free... do not overconstrain
-	string hold = "00111010101"
+	string hold = "00110010101"
 	FuncFit/Q/N=2/h=hold dsgnmBas_MTHR coeff, src
 	replaceText "lineshape fixed, optimized intensity"
 	plotPeaksC1S_comp(coeff, res)
@@ -226,8 +273,6 @@ function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	variable areaC1, areaC2, areaC3, areaTot 
 	int flagRemoved = 0
 	
-	
-	
 	int i
 	for (i = 6; i<=8; i=i+2) // 6, 8, 10 peak positions
 		if (abs(coeff[i]- startingCoeff[i]) > thresholdPosDelta)
@@ -240,7 +285,9 @@ function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	areaC3 = area(C3, -288, -282)
 	areaTot = areaC1 + areaC2 + areaC3
 	
-	print areaC1 / areaTot, areaC2 / areaTot, areaC3 / areaTot
+	if(dbg)
+		print areaC1 / areaTot, areaC2 / areaTot, areaC3 / areaTot
+	endif
 	
 	if(areaC1 / areaTot < thresholdArea || coeff[5] < thresholdIntensity) // no peak found, so hold the intensity to zero
 		coeff[5] = 0.1
@@ -281,14 +328,14 @@ function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	delta =  (coeff - startingCoeff) 
 	coeff[2] = startingCoeff[2] + delta[2] * 0.1   // Lor
 	coeff[3] = startingCoeff[3] + delta[3] * 0.2 // asym
-	coeff[4] = startingCoeff[4] + delta[4] * 0.1  // Gau
+	//coeff[4] = startingCoeff[4] + delta[4] * 0.1  // Gau
 	
 	replaceText "tuned back lineshape"
 	plotPeaksC1S_comp(coeff, res)
 	updateAndSleep(sleepTime)
 	
 	// 4) Fit the positions
-	hold = "11111000000"
+	hold = "11110000000"
 	hold = sBWO(hold, holdPeaks)
 	FuncFit/Q/N=2/h=hold dsgnmBas_MTHR coeff, src
 	replaceText "optimized intensity and position, shape locked "
@@ -301,13 +348,12 @@ function fitC1S_comp(coeff, src, [res, wait, dbg, sleepTime])
 	
 	// 5) Fit only bg and intensities
 	hold = sBWO("00111010101", holdPeaks)
-	FuncFit/Q/N=2/h=hold dsgnmBas_MTHR coeff, src // /c=IntensityConstrains
+	FuncFit/Q/N=2/h=hold dsgnmBas_MTHR coeff, src/I=1/W=std // /c=IntensityConstrains
 	replaceText "optimized intensity and position, shape locked "
 	plotPeaksC1S_comp(coeff, res)
 	updateAndSleep(sleepTime)
 	
 	TextBox/K/N=infoTBox
-
 end
 
 function fitC1S_CO(coeff, src, [res, wait, dbg, sleepTime])
