@@ -131,7 +131,39 @@ function/wave copy_append_coeff(src, coeff, s)
 	return wnew
 end
 
-// === IMAGING ===
+function plotCoeff(coeff)
+	wave coeff
+	variable rows = dimsize(coeff, 0)
+	variable cols = dimsize(coeff, 1)
+	duplicate/o coeff coeffImage
+	make/free/n=(cols) slice
+	
+	variable myMean, myStd, offset
+	
+	display
+	int i
+	
+	for(i = 0; i < rows; i++)
+		slice = coeffImage[i][p]
+		myMean = mean(slice)
+		myStd = sqrt(variance(slice))
+		print myMean, myStd
+		offset = 4 * i
+		coeffImage[i][] = (coeffImage[i][q] - myMean) / myStd + offset
+		
+		appendTograph coeffImage[i][]
+	endfor 
+	
+end
+
+function/s getBinStd(wave w)
+	variable N = sum(w)
+	variable delta = abs(dimDelta(w,0))
+	duplicate/o w, px, std
+	px = (w / N ) * (1 / delta)
+	std = sqrt(w * px * (1 - px))
+	return nameofWave(std)
+end
 
 
 function setLabelsFromString(wave w, wave /T labels)
@@ -142,380 +174,6 @@ function setLabelsFromString(wave w, wave /T labels)
 		setDimLabel 0, i, $(labels[i]), w
 	endfor
 end 
-
-
-
-function printInfo(w)
-	wave w
-	string str = "Rows"
-
-	print "dim \t\t size \t\t offset \t delta \r"
-	printf "%s \t %d \t\t %d \t\t %d \r", "Rows", dimSize(w, 0), dimOffset(w, 0), dimDelta(w, 0)
-	printf "%s \t %d \t\t %d \t\t %d \r", "Cols", dimSize(w, 1), dimOffset(w, 1), dimDelta(w, 1)
-end
-
-function printCoeff(coeff)
-	wave coeff
-	int i, N
-	string scoeff, app
-
-	N = dimSize(coeff, 0)	
-	scoeff = ""
-	
-	// add label
-	//app = getDimLabel(coeff, 0, i)
-	//app = padString(app, 12, 0x20) //0x20 is a space
-	//scoeff += app
-	
-	for(i = 0; i < N; i++)
-		
-		sprintf app, "%.3f", coeff[i]
-		app = padString(app, 10, 0x20) //0x20 is a space
-		scoeff += app
-	endfor
-	
-	print scoeff
-end
-
-function addEntriesToTBOX(tbox, coeff, err, [i])
-	string tbox
-	wave coeff, err
-	int i
-	
-	string entry, lab
-	variable j, N
-	
-	i = paramIsDefault(i) ? 0 : i
-	N = dimSize(coeff, 0)
-	
-	duplicate/free/rmd=[][i] coeff coeff_1d
-	redimension/n=(-1,0) coeff_1d
-	duplicate/free/rmd=[][i] err err_1d
-	redimension/n=(-1,0) err_1d
-	
-	for(j = 0; j < N; j++)
-		
-		// correct label for whitespaces
-		lab = getDimLabel(coeff_1d, 0, j)
-		lab = padString(lab, 12, 0x20) //0x20 is a space
-		sprintf entry, "   %s %.3f ± %.3f", lab, coeff_1d[j], err_1d[j]
-		appendText/n=$tbox entry
-		
-	endfor
-end
-
-
-// === PEAK ANALYSIS ===
-// THE FOLLOWING FUNCTIONS ARE SUPPOSED TO USE
-// IN ORDER
-function calibrate_peak_pos(src, pos)
-	wave src 
-	variable pos
-	wave peak
-	
-	variable peak_i = find_max(src)
-	print "Peak at index " + num2str(peak_i)
-	
-	// do a quick fit to estimate 
-	// the center
-	CurveFit/M=2/W=0 gauss, src[peak_i - 3,peak_i + 3]/D
-	
-	// save the peak position
-	wave coeff = $"W_coef"
-	variable peak_pos = coeff[2]
-	print "Peak at position " + num2str(peak_pos)
-	
-	// displace the peak to the position
-	displace(src, - peak_pos)
-	print "Calibrated peak position"
-end
-
-function get_sym_peak(src, x)
-	// generates a symmetric peak by
-	// mirroring the wave across the 
-	// vertical axis passing trough x
-	wave src
-	variable x
-	wave mirror = new_append(src, "_MIRROR")
-	reverse/p src/d= mirror
-	
-	// displace by the correct amount
-	variable n = numpnts(src)
-	variable start = pnt2x(src, 0)
-	variable finish = pnt2x(src, n - 1)
-	
-	variable a = x - start
-	variable b = finish - x
-	variable delta = b - a
-	displace(mirror, - delta)
-	
-	// get the peak
-	string srcName = nameofwave(src)
-	string mirrorName = nameofwave(mirror)
-	string peakName = srcName + "_SYM_PEAK"
-	
-	// find the right points to assign
-	variable delta_pos = x2pnt(src, x)
-	make/o/n=(2 * delta_pos) $peakName
-	wave peak = $peakName
-	copyscales/p src, peak
-
-	// combine the two using a command
-	string cmd = peakName+"=min("+srcName+"(x),"+mirrorName+"(x))"
-	execute cmd
-	
-	display peak
-end
-
-function fit_zlp(initial_coeff, src)
-	// fit the peak using a combination of lorentian and gaussiam
-	// no background
-	wave src
-	wave initial_coeff
-	wave res = new_append(src, "_FIT")
-	wave coeff = new_append_coeff(src, initial_coeff, "_COEFF")
-	Funcfit/TBOX=768 lorandGauss, coeff, src/d=res
-end
-
-function new_zlp(initial_coeff, src)
-	// create zero loss peak for source
-	wave src
-	wave initial_coeff
-	
-	string srcName = nameofwave(src)
-	string zlpName = srcName + "_ZLP"
-	string coeffName = srcName + "_ZLP_COEFF"
-	string inelasticName = srcName + "_INELASTIC"
-	
-	// make the waves
-	duplicate/o initial_coeff, $coeffName
-	duplicate/o src, $zlpName, $inelasticName
-	
-	wave coeff = $coeffName
-	wave zlp = $zlpName
-	wave inelastic = $inelasticName
-	
-	// ZLP FIRST FIT
-	FuncFit pos_dsgn, coeff, src[6,16] 
-	print coeff
-	zlp = pos_dsgn(coeff, -x)
-	
-	inelastic = src - zlp
-end
-
-// === BACKGROUND FOR INELASTIC PEAK ===
-function fit_expBg(initial_coeff, src)
-	// first do a manual fit, than refine 
-	// with this function
-
-	wave src
-	wave initial_coeff
-	
-	wave inelastic = $nameOfWave(src) + "_INELASTIC"
-	wave bg = new_append(inelastic, "_BG")
-	wave peaks = new_append(inelastic, "_PEAKS")
-	wave mask = copy_append(inelastic, "_BG_MASK")
-	wave coeff = copy_append_coeff(inelastic, initial_coeff, "_BG_COEFF")
-	
-	
-	// start by fitting the exponential tail
-	// after 1eV
-	variable i, j
-	i = x2pnt(inelastic, 0.3)
-	j = numpnts(inelastic)
-
-	// lock x0 and tau1
-	FuncFit/x=1/h="10010" saturationExp coeff inelastic[i, j - 1]
-	
-	// fit the initial slope
-	// set the mask
-	i = x2pnt(inelastic, 0.1)
-	j = x2pnt(inelastic, 0.7) 
-	mask[i,j] = 0
-	FuncFit/x=1/h="01101" saturationExp coeff inelastic/m=mask
-	
-	// save the results
-	bg = saturationExp(coeff, x)
-	peaks = inelastic - bg
-end
-
-function fit_bgIPRPTCDI(initial_coeff, src)
-	// first do a manual fit, than refine 
-	// with this function
-
-	wave src
-	wave initial_coeff
-	
-	wave inelastic = $nameOfWave(src) + "_INELASTIC"
-	wave bg = new_append(inelastic, "_BG")
-	wave peaks = new_append(inelastic, "_PEAKS")
-	wave mask = copy_append(inelastic, "_BG_MASK")
-	wave coeff = copy_append_coeff(inelastic, initial_coeff, "_BG_COEFF")
-	
-	
-	// start by fitting the exponential tail
-	// after 1eV
-	variable i, j
-	i = x2pnt(inelastic, 0.5)
-	j = numpnts(inelastic)
-
-	// lock x0 and tau1
-	FuncFit/x=1/h="10010" saturationExp coeff inelastic[i, j - 1]
-	
-	// fit the initial slope
-	// set the mask
-	i = x2pnt(inelastic, 0.1)
-	j = x2pnt(inelastic, 0.7) 
-	mask[i,j] = 0
-	j = x2pnt(inelastic, 0) 
-	mask[0,j] = 0
-	FuncFit/x=1/h="11011" saturationExp coeff inelastic/m=mask
-	
-	// save the results
-	bg = saturationExp(coeff, x)
-	peaks = inelastic - bg
-end
-
-function calibrate_bg(src, delta)
-	wave src
-	variable delta
-	wave initial_coeff
-	
-	wave inelastic = $nameOfWave(src) + "_INELASTIC"
-	wave bg = new_append(inelastic, "_BG")
-	wave peaks = new_append(inelastic, "_PEAKS")
-	wave coeff = copy_append_coeff(inelastic, initial_coeff, "_BG_COEFF")
-	duplicate/free src res
-	
-	// Tune down BG until every point of the fit after
-	// 0.1 eV is over the bg fit.
-	// his way its nice when seen
-	// in log scale.
-	variable i, j, m
-	m = find_max(inelastic)
-	
-	for(i=0; i<100; i+=1)
-	
-		// get the residual
-		bg = saturationExp(coeff, x)
-		peaks = inelastic - bg
-		
-		// truncate all the 
-		// points before the max
-		res = peaks
-		res[0, m] = delta +1
-	
-		if (wavemin(res) >= -delta)
-			break
-		endif
-		
-		// remove 1% if bg is too high.
-		// This keeps the same slope in 
-		// log scale but turns down the 
-		// intercept
-		coeff[2] = coeff[2] * 0.99
-	endfor
-	print "Calibrated after " + num2str(i) + " iterations"
-end
-	
-function get_peaks(src)
-	wave src
-
-	string srcName = nameofwave(src)
-	string peaksName =  srcName + "_PEAKS"
-	
-	wave base = $(srcName + "_BASE")
-	
-	// make the peaks
-	duplicate/o $srcName, $peaksName
-	
-	if(waveexists(base) == 0)
-		print "Error: no base wave found!"
-		return -1
-	endif
-	
-	wave peaks = $peaksName
-	peaks = src - base
-end
-
-function fit_base(src)
-	wave src
-	string srcName = nameofwave(src)
-	string zlpName = srcName + "_ZLP"
-	string bgName = srcName + "_BG"
-	string baseName = srcName + "_BASE"	
-	
-	// Add ZLP, BG and BASE if they do not exist
-	if(waveexists($srcName + "_ZLP_COEFF") == 0)
-		print "Init ZLP"
-		make/free c = {0.01, 0.05, 0.03, 15000, 0}
-		new_zlp(c, src)
-	endif
-	if(waveexists($ srcName + "_BG_COEFF") == 0)
-		print "Init BG"
-		make/free c = {0, 0.01, 360, 0.01, 2.23}
-		fit_expBg(c, src)
-	endif
-	if(waveexists($ srcName + "_BASE") == 0)
-		print "Init BASE"
-		duplicate/o src, $ srcName + "_BASE"
-	endif
-	if(waveexists($ srcName + "_RES") == 0)
-		print "Init RES"
-		duplicate/o src, $ srcName + "_RES"
-	endif
-
-	wave zlp = $ srcName + "_ZLP"
-	wave bg = $ srcName + "_BG"
-	wave base = $ srcName + "_BASE"
-	wave res = $ srcName + "_RES"
-	wave inelastic = $srcName + "_INELASTIC"
-	duplicate/free res, tmp
-	
-	// TODO: automatic weights settings
-	print "Adding weights"
-	duplicate/o src weights
-	weights = 1
-	weights[24,65] = 0
-	
-	FuncFit/TBOX=768 {{dsgnnb_MTHR, d}, {saturationExpV2, PTCDI_17_12_2024_R1_BG_COEFF, HOLD="01000"}} src/M=weights
-	// save the fit 
-	zlp = dsgnnb_MTHR($"PTCDI_17_12_2024_R1_ZLP_COEFF", x)
-	bg = saturationExpV2($"PTCDI_17_12_2024_R1_BG_COEFF", x)
-	inelastic = src - zlp
-	
-	
-	// Tune down BG until every point after the zlp 
-	// is over the bg : this way its nice when seen
-	// in log scale.
-	variable i, N
-	N = numpnts(base)
-	
-	for(i=0; i<20; i+=1)
-		base = zlp + bg
-		res = src - base
-		
-		// truncate all the non interesting points
-		tmp = res
-		tmp[0,25] = 0
-		
-		if (wavemin(tmp) >= 0)
-			print "Calibrated BG"
-			break
-		endif
-		
-		// remove 1% if bg is too high.
-		// This keeps the same slope in 
-		// log scale but turns down the 
-		// intercept
-		bg = bg * 0.99
-	endfor
-	print "Attenuated BG for " + num2str(i) + " times" 
-	
-	string gname =  srcName + "_BaseFIT"
-	display/n = $(gname)
-	appendToGraph src, zlp, bg, base, weights
-end
 
 Function TransAx_eVtoCm_1(w, val)
     Wave/Z w            // a parameter wave, if desired. Argument must be present for FindRoots.
@@ -528,4 +186,62 @@ Function/S TickMeV(val)
 	variable val
    String TickMeV
    TickMeV = num2str(val * 1000)  // Convert eV to meV
+End
+
+
+
+Function UserPauseCheck(graphName, autoAbortSecs)
+	String graphName
+	Variable autoAbortSecs
+	
+	DoWindow/F $graphName // Bring graph to front
+	if (V_Flag == 0) // Verify that graph exists
+		Abort "UserCursorAdjust: No such graph."
+		return -1
+	endif
+	
+	NewPanel /K=2 /W=(187,368,437,531) as "Pause for Cursor"
+	DoWindow/C tmp_PauseforCursor // Set to an unlikely name
+	AutoPositionWindow/E/M=1/R=$graphName // Put panel near the graph
+	DrawText 21,20,"Check if valid initial parameters"
+	DrawText 21,40,"then click continue or abort."
+	Button button0,pos={80,58},size={92,20},title="Continue"
+	Button button0,proc=UserPauseCheck_ContButtonProc
+	
+	Variable didAbort= 0
+
+	if( autoAbortSecs == 0 )
+		PauseForUser tmp_PauseforCursor,$graphName
+	else
+		SetDrawEnv textyjust= 1
+		DrawText 162,103,"sec"
+		SetVariable sv0,pos={48,97},size={107,15},title="Aborting in "
+		SetVariable sv0,limits={-inf,inf,0},value= _NUM:10
+		Variable td= 10,newTd
+		Variable t0= ticks
+		Do
+			newTd= autoAbortSecs - round((ticks-t0)/60)
+			if( td != newTd )
+				td= newTd
+				SetVariable sv0,value= _NUM:newTd,win=tmp_PauseforCursor
+				if( td <= 10 )
+					SetVariable sv0,valueColor= (65535,0,0),win=tmp_PauseforCursor
+				endif
+			endif
+			if( td <= 0 )
+				DoWindow/K tmp_PauseforCursor
+				didAbort= 1
+				break
+			endif
+			PauseForUser/C tmp_PauseforCursor,$graphName
+		while(V_flag)
+	endif
+	return didAbort
+end
+
+
+
+Function UserPauseCheck_ContButtonProc(ctrlName) : ButtonControl
+	String ctrlName
+	DoWindow/K tmp_PauseforCursor // Kill panel
 End
