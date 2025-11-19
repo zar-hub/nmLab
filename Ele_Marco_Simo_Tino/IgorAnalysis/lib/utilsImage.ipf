@@ -18,7 +18,7 @@ function/wave getSlice(image, i)
 	//	copyscales/P image fitres
 end
 
-function sliceImage(image, offset)
+function imageSlice(image, offset)
 	wave image 
 	variable offset
 	

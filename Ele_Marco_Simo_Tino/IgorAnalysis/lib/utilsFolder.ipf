@@ -9,5 +9,5 @@ end
 
 function moveToFolder(string path, string name)
 	copyToFolder(path, name)
-	killwaves $name 
+	killwaves/z $name 
 end

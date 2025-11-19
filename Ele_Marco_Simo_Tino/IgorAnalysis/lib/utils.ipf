@@ -6,6 +6,70 @@ function updateAndSleep(variable t)
 	endif
 end
 
+function/s getGlobalWave(string name, [wave like])
+	WAVE/Z w = $"name" 
+	if(!WaveExists(w)) // create it
+		if (!paramIsDefault(like))
+			duplicate/o like, w
+		else
+			make w
+		endif
+	endif
+	
+	return name
+end
+
+function getNumberFrom(string s, int pos)
+	// gets the number from the string s 
+	// starting at position pos. Only works
+	// with integer numbers
+	int N = strlen(s)
+	int i
+	variable res
+	for(i=pos;i<N;i++)
+		if(numtype(str2num(s[i])) == 2 ) // Nan found
+		break
+		endif
+	endfor
+	
+	// return a crazy number if Nan
+	res = str2num(s[pos, i-1])
+	res = numtype(res) == 2 ? -999 : res
+	return res 
+end
+
+function/wave getCompatibleConstrains(hold, constrains)
+	// Keeps only constrains that are compatible with a give hold string.
+	// Generates a copy of constrains
+
+	string hold
+	wave/t constrains
+	variable i,j, k
+	variable N = dimsize(constrains,0)
+
+	string constrain
+	duplicate/o/t constrains compatibleConstrains
+
+	for(i=0;i<N;i=i+1)
+		
+		constrain = compatibleConstrains[i]
+		j = strsearch(constrain, "K", 0)
+		k = getNumberFrom(constrain, j + 1)
+		//print i, j, k, hold[k], constrain
+		
+		if(k >= strlen(hold))
+			Print "Error, hold string is shorter than required parameter"
+			return constrains
+		endif
+
+		if(cmpstr(hold[k], "1") == 0) // remove parameter if is holding
+			deletePoints i, 1, compatibleConstrains
+			i=i-1
+			N=N-1
+		endif
+	endfor
+	return compatibleConstrains
+end
 
 function/s sBWO(s1, s2)
 	// string Bit Wise Or

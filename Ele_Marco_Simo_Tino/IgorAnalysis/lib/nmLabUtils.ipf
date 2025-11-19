@@ -1,5 +1,6 @@
 #include ":utils"
 
+
 function createFolder(wave wav, [wave initial_coeff])
 
 	// names
@@ -35,33 +36,34 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
 	variable offset
 	
 	redimension/d initial_coeff 	// make sure to have double element coeff wave	
+	duplicate/o initial_coeff $nameofwave(initial_coeff) // duplicate the initial coeff in current folder
 		
 	// Prepare working folder
-	string name = nameOfWave(src_image)
-	string folderName = name + "_FOLDER"
-	createFolder(src_image, initial_coeff = initial_coeff)
-	setDataFolder $folderName
+	// string name = nameOfWave(src_image)
+	// string folderName = name + "_FOLDER"
+	// createFolder(src_image, initial_coeff = initial_coeff)
+	// setDataFolder $folderName
 	
 	// Initialize waves
+	string name = nameOfWave(src_image) + "_"
+	duplicate/o src_image $name
+	
 	wave image = $name
-	wave fit = copy_append(image, "_FIT")
-	wave coeff = copy_append_coeff(image, initial_coeff, "_COEFF") 
-	wave sigma = new_append_coeff(image, initial_coeff, "_SIGMA")
+	wave fit = copy_append(image, "FIT")
+	wave coeff = copy_append_coeff(image, initial_coeff, "COEFF") 
+	wave sigma = new_append_coeff(image, initial_coeff, "SIGMA")
 	string gName, wname, tboxName
 	variable i, N, j
    string num, trace
    
    // set def params
    N = dimsize(image, 1)
-   if(paramisDefault(start))
-   	start = 0
-   endif
-	if(paramisDefault(stop))
-   	stop = N
-   else 
-   	stop = min(stop, N)
-   endif
-	
+   start = paramisDefault(start) ? 0 : start
+   stop = paramisDefault(stop) ? N : min(stop, N)
+   
+   // save starting folder
+   dfreF startingFolder = getDataFolderDFR()
+
 	// temp graph helpers
 	duplicate/o initial_coeff slice_coeff
 	duplicate/o/rmd=[][start] image, slice, slice_fit
@@ -79,12 +81,12 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
    appendToGraph slice, slice_fit
    
    if(cmpstr(fitType, "multiComp") == 0)
-   	fitC1S_comp(slice_coeff, slice, res=slice_fit, wait = 1)
+   		fitC1S_comp(slice_coeff, slice, res=slice_fit, wait = 1)
    elseif(cmpstr(fitType, "co") == 0)
-   	fitC1S_CO(slice_coeff, slice, res=slice_fit, wait = 1)
+   		fitC1S_CO(slice_coeff, slice, res=slice_fit, wait = 1)
    else
-   	Printf "Type : %s not supported...\n",fitType
-   	i = N // do not enter the loop
+   		Printf "Type : %s not supported...\n",fitType
+   		i = N // do not enter the loop
    endif
    
    //slice_fit = DsgnmBad2_MTHR(initial_coeff, x)
@@ -92,17 +94,17 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
    TextBox/C/N=$tboxName/A=LT/X=2/Y=2  // add two percent of padding to X and Y
    setactiveSubwindow ##
    
-   display/host=#/n=image/w=(0.61,0,1,1)		// IMAGE SLICES GRAPH
+   display/host=#/n=image/w=(0.61,0,1,1)	// IMAGE SLICES GRAPH
    appendToGraph slice, slice_fit
    setactiveSubwindow ##
-   
    doUpdate
+   
    // check if starting values are correct
    variable didAbort = 0
    didAbort = UserPauseCheck(gname, 5)
    if (didAbort)
    	// go back to root
-   	setdataFolder "root:"
+   	setdataFolder startingFolder
    	return -1
    endif
     
@@ -180,7 +182,7 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
 	setactiveSubwindow ##
     
    // go back to root
-   setdataFolder "root:"
+   setdataFolder startingFolder
 end
 
 function removeAllX(string name)
@@ -259,6 +261,9 @@ function startAnalysis(wave image, wave FL)
 	calibrateImageFLIN(imageName, FLName, currentName)
 	movetoFolder(folderPath, imageName)
 	
+	setdataFolder folderPath
+	newimage/K=0 $imageName
+	
 	setDataFolder root:
 	
 end
@@ -284,7 +289,6 @@ function calibrateImageFLIN(string imageName, string FLName, string currentName)
 		return -1
 	endif
 	
-	newimage/K=0 image
 	display FL
 	CurveFit/W=0 Sigmoid, FL/D
 	
