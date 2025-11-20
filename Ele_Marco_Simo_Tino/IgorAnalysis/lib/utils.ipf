@@ -73,19 +73,29 @@ end
 
 function/s sBWO(s1, s2)
 	// string Bit Wise Or
+	// assume s1 is longer than s2
+	
 	string s1, s2
 	int N = min(strlen(s1), strlen(s2))
 	int i
 	variable n1, n2
-	string res = ""
-
+	string temp, res
+	
+	if (strlen(s1) < strlen(s2))
+		temp = s2
+		s2 = s1
+		s1 = temp
+	endif 	
+	
+	res = ""
 	for(i=0;i<N;i++)
 		n1 = str2num(s1[i])
 		n2 = str2num(s2[i])
 		res = res + num2str(n1 | n2)
 		//print i, n1, n2, n1 | n2
 	endfor
-
+	
+	res = res + s1[N,INF]
 	return res
 end
 

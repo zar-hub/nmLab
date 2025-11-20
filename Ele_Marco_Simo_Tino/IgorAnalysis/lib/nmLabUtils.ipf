@@ -84,12 +84,13 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
    		fitC1S_comp(slice_coeff, slice, res=slice_fit, wait = 1)
    elseif(cmpstr(fitType, "co") == 0)
    		fitC1S_CO(slice_coeff, slice, res=slice_fit, wait = 1)
+   	elseif(cmpstr(fitType, "compAndCO") == 0)
+   		fitC1S_compAndCO(slice_coeff, slice, res=slice_fit, wait = 1)
    else
    		Printf "Type : %s not supported...\n",fitType
    		i = N // do not enter the loop
    endif
    
-   //slice_fit = DsgnmBad2_MTHR(initial_coeff, x)
  	tboxName = "CF_" + wname					// Put the box up left and
    TextBox/C/N=$tboxName/A=LT/X=2/Y=2  // add two percent of padding to X and Y
    setactiveSubwindow ##
@@ -127,6 +128,8 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
    		fitC1S_comp(slice_coeff, slice, res=slice_fit)
    	elseif(cmpstr(fitType, "co") == 0)
    		fitC1S_CO(slice_coeff, slice, res=slice_fit)	
+   	elseif(cmpstr(fitType, "compAndCO") == 0)
+   		fitC1S_compAndCO(slice_coeff, slice, res=slice_fit)
    	else
    		Printf "Type : %s not supported...\n", fitType
    		break // from loop
