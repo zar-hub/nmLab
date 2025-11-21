@@ -6,14 +6,65 @@ function updateAndSleep(variable t)
 	endif
 end
 
-function/s getGlobalWave(string name, [wave like])
-	WAVE/Z w = $"name" 
-	if(!WaveExists(w)) // create it
-		if (!paramIsDefault(like))
-			duplicate/o like, w
-		else
-			make w
+function/s waveToHoldString(wave w)
+	int i
+	string hold = ""
+	for(i=0;i<dimsize(w,0);i++)
+		hold = hold + num2str(w[i])
+	endfor
+	return hold
+end
+
+function/s getGlobalString(string name, [string folder, string ifUndef])
+	if(paramisDefault(ifUndef))
+		ifUndef = ""
+	endif
+	
+	svar/z gs = $name
+	if(!paramIsDefault(folder))
+		svar/z gs = $(folder + ":" + name)
+	endif
+	if (!svaR_Exists(gs))
+		string/G $name = ifUndef
+		if(!paramIsDefault(folder))
+			movestring $name, $(folder+":"+name)
 		endif
+	endif
+	
+	//return the handle to the string
+	if(!paramIsDefault(folder))
+		return folder + ":" + name
+	endif
+	return name
+end
+
+function/s getGlobalWave(string name, [string folder, wave like])
+	// Get / create a wave with (name) duplicating [like] in the folder
+	// [folder]
+	
+	WAVE/Z w = $name
+	if(!paramIsDefault(folder))
+		//print "get from folder", folder + ":" + name
+		WAVE/Z w = $(folder + ":" + name)
+	endif
+	
+	// create it if not exists
+	if(!WaveExists(w)) // create it
+		//print "not found", name
+		if (!paramIsDefault(like))
+			//print "duplicate"
+			duplicate/o like, $name 
+		else
+			make/o $name
+		endif
+		if(!paramIsDefault(folder))
+			movetoFolder(folder, name)
+		endif
+	endif
+	
+	//return the handle to the wave
+	if(!paramIsDefault(folder))
+		return folder + ":" + name
 	endif
 	
 	return name
@@ -42,33 +93,53 @@ function/wave getCompatibleConstrains(hold, constrains)
 	// Keeps only constrains that are compatible with a give hold string.
 	// Generates a copy of constrains
 
+	// Keeps only constrains that are compatible with a give hold string.
+	// Generates a copy of constrains
+
 	string hold
 	wave/t constrains
-	variable i,j, k
+	variable i,j, k, toRemove
 	variable N = dimsize(constrains,0)
 
 	string constrain
 	duplicate/o/t constrains compatibleConstrains
 
 	for(i=0;i<N;i=i+1)
-		
+		toRemove = 0
 		constrain = compatibleConstrains[i]
+		
 		j = strsearch(constrain, "K", 0)
 		k = getNumberFrom(constrain, j + 1)
-		//print i, j, k, hold[k], constrain
+		toRemove = toRemove | cmpstr(hold[k], "1") == 0
 		
-		if(k >= strlen(hold))
-			Print "Error, hold string is shorter than required parameter"
-			return constrains
-		endif
-
-		if(cmpstr(hold[k], "1") == 0) // remove parameter if is holding
+		j = strsearch(constrain, "K", 3)
+		k = getNumberFrom(constrain, j + 1)
+		toRemove = toRemove | cmpstr(hold[k], "1") == 0
+		
+		if(toRemove) // remove parameter if is holding
 			deletePoints i, 1, compatibleConstrains
 			i=i-1
 			N=N-1
 		endif
 	endfor
 	return compatibleConstrains
+end
+
+function mystrsearch(string s, string c, int start)
+	// return -1 on failure
+
+	// bound the start pos from below
+	start = max(start, 0)
+	string tmp
+	
+	int i
+	for(i = start; i < strlen(s); i++)
+		tmp = s[i]
+		if(cmpstr(tmp, c)==0)
+			return i
+		endif
+	endfor
+	return -1
 end
 
 function/s sBWO(s1, s2)
@@ -233,7 +304,8 @@ end
 function/s getBinStd(wave w)
 	variable N = sum(w)
 	variable delta = abs(dimDelta(w,0))
-	duplicate/o w, px, std
+	duplicate/free w, px
+	duplicate/o w, std
 	px = (w / N ) * (1 / delta)
 	std = sqrt(w * px * (1 - px))
 	return nameofWave(std)

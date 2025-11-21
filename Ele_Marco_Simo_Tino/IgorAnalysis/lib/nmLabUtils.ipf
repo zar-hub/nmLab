@@ -28,26 +28,35 @@ function createFolder(wave wav, [wave initial_coeff])
 	print "saved to folder", folderName
 end
 
-function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, overclock])
+function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, overclock, sleepTime, quiet, duplicateInFolder])
 
 	wave initial_coeff, src_image
 	int start, stop, overclock
 	string fitType
-	variable offset
+	variable offset, sleepTime, quiet, duplicateInFolder
 	
 	redimension/d initial_coeff 	// make sure to have double element coeff wave	
-	duplicate/o initial_coeff $nameofwave(initial_coeff) // duplicate the initial coeff in current folder
-		
-	// Prepare working folder
-	// string name = nameOfWave(src_image)
-	// string folderName = name + "_FOLDER"
-	// createFolder(src_image, initial_coeff = initial_coeff)
-	// setDataFolder $folderName
+	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
+	quiet = paramisDefault(quiet) ? 1 : quiet
 	
+	if(!paramIsDefault(duplicateInFolder))
+		duplicate/o initial_coeff $nameofwave(initial_coeff) // duplicate the initial coeff in current folder
+	endif
+	
+	
+	// if initial_coeff wave is 2D then duplicate and split it,
+	// the second column is the hold parameters
+	if(dimsize(initial_coeff, 1) != 0)
+		duplicate/free/rmd=[][1] initial_coeff, holdWave 
+		redimension/n=(-1,0) holdWave // and so is holdWave
+		print "Generating Hold Parameters"
+		svar globalHold = $getglobalString("globalHold", folder = ":options")
+		globalHold = wavetoHoldString(holdWave)
+	endif
 	// Initialize waves
 	string name = nameOfWave(src_image) + "_"
-	duplicate/o src_image $name
 	
+	duplicate/o src_image $name
 	wave image = $name
 	wave fit = copy_append(image, "FIT")
 	wave coeff = copy_append_coeff(image, initial_coeff, "COEFF") 
@@ -65,33 +74,33 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
    dfreF startingFolder = getDataFolderDFR()
 
 	// temp graph helpers
-	duplicate/o initial_coeff slice_coeff
-	duplicate/o/rmd=[][start] image, slice, slice_fit
-	redimension/n=(-1,0) slice, slice_fit
+	duplicate/o/rmd=[][start] image, $"slice", $"slice_fit"
+	redimension/n=(-1,0) $"slice", $"slice_fit"
+	wave slice = $moveToFolder(":internal", "slice")
+	wave slice_fit = $moveToFolder(":internal", "slice_fit")
+	wave slice_coeff = $getGlobalWave("slice_coeff", like = initial_coeff, folder = ":internal")
 	
 	// CREATE PANEL
 	newpanel/W=(0,0,750,450) as name + " Panel"
-	KillWindow  $( name + "Panel" )
+	KillWindow/Z  $( name + "Panel" )
 	DoWindow/C $( name + "Panel" )
 	gName = winname(0, 64)
    printf "Created Panel %s\n", gName
    
 	// Create the Graphs
    display/host=#/n=sliceFit/w=(0,0,0.60,1)	// SLICE FIT GRAPH
-   appendToGraph slice, slice_fit
-   
    if(cmpstr(fitType, "multiComp") == 0)
    		fitC1S_comp(slice_coeff, slice, res=slice_fit, wait = 1)
    elseif(cmpstr(fitType, "co") == 0)
    		fitC1S_CO(slice_coeff, slice, res=slice_fit, wait = 1)
    	elseif(cmpstr(fitType, "compAndCO") == 0)
-   		fitC1S_compAndCO(slice_coeff, slice, res=slice_fit, wait = 1)
+   		fitC1S_compAndCO(slice_coeff, slice, res=slice_fit, wait = 1, quiet=quiet)
    else
    		Printf "Type : %s not supported...\n",fitType
    		i = N // do not enter the loop
    endif
    
- 	tboxName = "CF_" + wname					// Put the box up left and
+ 	tboxName = "CF_"				// Put the box up left and
    TextBox/C/N=$tboxName/A=LT/X=2/Y=2  // add two percent of padding to X and Y
    setactiveSubwindow ##
    
@@ -116,27 +125,31 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
 		MultiThreadingControl setMode = 8
 	endif
 	
-   for (i = start; i < stop; i++)   	
-   	// load image slice into the waves
-   	slice = image[p][i]
-   	slice_coeff = coeff[p][i]
+   for (i = start; i < stop; i++)   
+   		if(!quiet)
+   			print ""
+   			printf "===== FITTING SLICE : %s =====\n", num2str(i) 
+   		endif	
+   		// load image slice into the waves
+   		slice = image[p][i]
+   		slice_coeff = coeff[p][i]
    	
-   	setactiveSubwindow #sliceFit
-   	removefromGraph/all
+   		setactiveSubwindow #sliceFit
+   		removefromGraph/all
    	
-   	if(cmpstr(fitType, "multiComp") == 0)
-   		fitC1S_comp(slice_coeff, slice, res=slice_fit)
-   	elseif(cmpstr(fitType, "co") == 0)
-   		fitC1S_CO(slice_coeff, slice, res=slice_fit)	
-   	elseif(cmpstr(fitType, "compAndCO") == 0)
-   		fitC1S_compAndCO(slice_coeff, slice, res=slice_fit)
-   	else
-   		Printf "Type : %s not supported...\n", fitType
-   		break // from loop
-   	endif
+   		if(cmpstr(fitType, "multiComp") == 0)
+   			fitC1S_comp(slice_coeff, slice, res=slice_fit, sleepTime=sleepTime)
+   		elseif(cmpstr(fitType, "co") == 0)
+   			fitC1S_CO(slice_coeff, slice, res=slice_fit, sleepTime=sleepTime)	
+   		elseif(cmpstr(fitType, "compAndCO") == 0)
+   			fitC1S_compAndCO(slice_coeff, slice, res=slice_fit, sleepTime=sleepTime, quiet=quiet)
+   		else
+   			Printf "Type : %s not supported...\n", fitType
+   			break // from loop
+   		endif
    	
-   	// save fit results
-   	coeff[][i] = slice_coeff[p]
+   		// save fit results
+   		coeff[][i] = slice_coeff[p]
     	fit[][i] = slice_fit[p]
     	wave w_sigma = $"W_sigma"
     	sigma[][i] = w_sigma[p] // default sigma wave used by FuncFit
@@ -146,8 +159,8 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
     		coeff[][i + 1] = coeff[p][i]
     	endif
    	
-   	// display fit results in tbox and terminal
-   	replacetext/n=$tboxName "\f01 Lineshape : DSGN \f00"
+   		// display fit results in tbox and terminal
+   		replacetext/n=$tboxName "\f01 Lineshape : DSGN \f00"
 		//addEntriesToTBOX(tboxName, coeff, sigma, i=i)
 		printcoeff(slice_coeff)
     	setactiveSubwindow ##

@@ -7,7 +7,8 @@ function copyToFolder(string path, string name)
 end
 
 
-function moveToFolder(string path, string name)
+function/s moveToFolder(string path, string name)
 	copyToFolder(path, name)
 	killwaves/z $name 
+	return path + ":" + name
 end
