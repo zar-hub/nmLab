@@ -1,0 +1,49 @@
+IGOR
+WAVES/D/N=(22,2)	KDefault_C1S_MultipleComponentsAndCO
+BEGIN
+	134.811	0
+	-1.25796	0
+	0.118	0
+	0.269	0
+	0.224	0
+	9	0
+	-286.965	0
+	0.188332	1
+	0.124335	1
+	0.470137	1
+	65.7916	0
+	-284.487	0
+	0.188332	1
+	0.124335	1
+	0.470137	1
+	283.107	0
+	-283.947	0
+	0.188332	1
+	0.124335	1
+	0.470137	1
+	191.928	0
+	-283.557	0
+END
+X SetScale/P x 0,1,"", KDefault_C1S_MultipleComponentsAndCO; SetScale/P y 0,1,"", KDefault_C1S_MultipleComponentsAndCO; SetScale d 0,0,"", KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 0, 'Bg q', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 1, 'Bg m', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 2, 'CO lor', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 3, 'CO asy', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 4, 'CO gau', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 5, 'CO int', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 6, 'CO pos', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 7, 'C1 lor', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 8, 'C1 asy', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 9, 'C1 gau', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 10, 'C1 int', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 11, 'C1 pos', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 12, 'C2 lor', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 13, 'C2 asy', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 14, 'C2 gau', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 15, 'C2 int', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 16, 'C2 pos', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 17, 'C3 lor', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 18, 'C3 asy', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 19, 'C3 gau', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 20, 'C3 int', KDefault_C1S_MultipleComponentsAndCO
+X SetDimLabel 0, 21, 'C3 pos', KDefault_C1S_MultipleComponentsAndCO

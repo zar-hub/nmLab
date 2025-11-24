@@ -557,6 +557,7 @@ function createCompAndCOConstrains()
 end
 
 function fitC1S_compAndCO(coeff, src, [res, wait, dbg, sleepTime, quiet])
+	
 	wave coeff, src, res
 	int wait, dbg
 	variable sleepTime, quiet

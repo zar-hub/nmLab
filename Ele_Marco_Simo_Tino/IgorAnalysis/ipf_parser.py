@@ -4,7 +4,7 @@ import argparse
 
 def parse_ipf_functions(folder_path, output_file="functions.md"):
     # Regex pattern for function definitions
-    func_pattern = re.compile(r"^\s*function\s+(\w+)\s*\(([^)]*)\)", re.IGNORECASE)
+    func_pattern = re.compile(r"^\s*function(?:/\w+)?\s+(\w+)\s*\(([^)]*)\)", re.IGNORECASE)
     results = []
 
     # Walk through all files in the folder

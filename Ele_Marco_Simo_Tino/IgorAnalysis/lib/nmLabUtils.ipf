@@ -1,5 +1,82 @@
 #include ":utils"
 
+function removeBackground(wave coeff, wave image)
+	Print "Removing background using Mulitcomponents and CO of image : ",nameofWave(image)
+	duplicate/o image, $(nameOfWave(image) + "_NoBG")
+	wave background = $(nameOfWave(image) + "_NoBG")
+	
+	// get 1D waves
+	duplicate/o/rmd=[][0] image, thisBackground, slice
+	redimension/n=(-1,0) thisBackground, slice
+	duplicate/o/rmd=[][0] coeff, thisCoeff
+	redimension/n=(-1,0) thisCoeff
+	
+	display thisBackground, slice
+	int i 
+	for(i=0;i<dimsize(image,1);i++)
+		thisCoeff[] = coeff[p][i]
+		slice[] = image[p][i]
+		plotPeaksC1S_compAndCO(thisCoeff, thisBackground, plot="bg")
+		background[][i] = slice[p] - thisBackground[p]
+		doUpdate
+		Sleep/s 0.1
+	endfor 
+end
+
+function normalizeArea(wave coeff, wave image)
+	Print "Normalizing spectra using area: ",nameofWave(image)
+	duplicate/o image, $(nameOfWave(image) + "_Norm")
+	wave normImage = $(nameOfWave(image) + "_Norm")
+	
+	// get 1D waves
+	duplicate/o/rmd=[][0] image, slice, fitSlice
+	redimension/n=(-1,0) slice, fitSlice
+	duplicate/o/rmd=[][0] coeff, thisCoeff
+	redimension/n=(-1,0) thisCoeff
+	
+	display slice, fitSlice
+	int i 
+	for(i=0;i<dimsize(image,1);i++)
+		// remove bg and CO
+		thisCoeff[] = coeff[p][i]
+		thisCoeff[0,1] = 0
+		thisCOeff[5] = 0
+		
+		// get the slices
+		fitSlice = dsgnmBad2_MTHR(thisCoeff, x)
+		slice = image[p][i]
+		doUpdate
+		Sleep/s 0.1
+		
+		slice = slice / waveMax(fitSlice)
+		fitSlice = fitSlice / waveMax(fitSlice)
+		normImage[][i] = slice[p]
+		
+		doUpdate
+		Sleep/s 0.1
+	endfor 
+end
+
+function computeDifference(wave image)
+	Print "Computing difference using first spectre as reference"
+	duplicate/o image, $(nameOfWave(image) + "_Diff")
+	wave diffImage = $(nameOfWave(image) + "_Diff")
+	
+	int i 
+	for(i=0;i<dimsize(image,1);i++)
+		diffImage[][i] = image[p][i] - image[p][0] 
+	endfor
+end
+
+function lineshapeCompatibility(wave coeff, wave image)
+	string name = nameofWave(image)
+	removeBackground(coeff, image)
+	wave noBg = $(name + "_NoBg")
+	normalizeArea(coeff, noBg)
+	wave normalized  = $(name + "_NoBg_Norm")
+	computeDifference(normalized)
+end
+
 
 function createFolder(wave wav, [wave initial_coeff])
 
@@ -79,6 +156,8 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
 	wave slice = $moveToFolder(":internal", "slice")
 	wave slice_fit = $moveToFolder(":internal", "slice_fit")
 	wave slice_coeff = $getGlobalWave("slice_coeff", like = initial_coeff, folder = ":internal")
+	redimension/n=(-1,0) slice_coeff // make sure this is 1D
+	slice_coeff[] = initial_coeff[p][0]
 	
 	// CREATE PANEL
 	newpanel/W=(0,0,750,450) as name + " Panel"

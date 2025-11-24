@@ -14,3 +14,4 @@ To update the list run in the [Igor Folder](/Ele_Marco_Simo_Tino/IgorAnalysis/) 
 ```
 python .\ipf_parser.py -f .\lib
 ```
+
