@@ -57,14 +57,15 @@ function normalizeArea(wave coeff, wave image)
 	endfor 
 end
 
-function computeDifference(wave image)
+function computeDifference(wave image, [variable n])
+	n = paramisDefault(n) ? 0 : n
 	Print "Computing difference using first spectre as reference"
 	duplicate/o image, $(nameOfWave(image) + "_Diff")
 	wave diffImage = $(nameOfWave(image) + "_Diff")
 	
 	int i 
 	for(i=0;i<dimsize(image,1);i++)
-		diffImage[][i] = image[p][i] - image[p][0] 
+		diffImage[][i] = image[p][i] - image[p][n] 
 	endfor
 end
 
