@@ -48,8 +48,8 @@ function normalizeArea(wave coeff, wave image)
 		doUpdate
 		Sleep/s 0.1
 		
-		slice = slice / waveMax(fitSlice)
-		fitSlice = fitSlice / waveMax(fitSlice)
+		slice = slice[p] / waveMax(fitSlice)
+		fitSlice = fitSlice[p] / waveMax(fitSlice)
 		normImage[][i] = slice[p]
 		
 		doUpdate
@@ -57,15 +57,38 @@ function normalizeArea(wave coeff, wave image)
 	endfor 
 end
 
-function computeDifference(wave image, [variable n])
+function computeDifference(wave coeff, wave image, [variable n])
+
+	variable A
 	n = paramisDefault(n) ? 0 : n
-	Print "Computing difference using first spectre as reference"
+	Print "Computing difference using first fit spectre as reference"
+	
 	duplicate/o image, $(nameOfWave(image) + "_Diff")
 	wave diffImage = $(nameOfWave(image) + "_Diff")
 	
+	duplicate/o/rmd=[][0] image, slice, fitSlice
+	redimension/n=(-1,0) slice, fitSlice
+	duplicate/o/rmd=[][0] coeff, thisCoeff
+	redimension/n=(-1,0) thisCoeff
+	
+	// get n-th slice witout bg and CO
+	thisCoeff[] = coeff[p][n]
+	thisCoeff[0,1] = 0
+	thisCOeff[5] = 0
+
+	fitSlice = dsgnmBad2_MTHR(thisCoeff, x)
+	A = waveMax(fitSlice)
+	fitSlice = fitSlice[p] / A 
+	
+	display slice, fitSlice
+	
 	int i 
 	for(i=0;i<dimsize(image,1);i++)
-		diffImage[][i] = image[p][i] - image[p][n] 
+		slice = image[p][i]
+		doupdate
+		sleep/s 0.1
+		diffImage[][i] = slice[p] - fitSlice[p]
+		
 	endfor
 end
 
@@ -75,7 +98,7 @@ function lineshapeCompatibility(wave coeff, wave image)
 	wave noBg = $(name + "_NoBg")
 	normalizeArea(coeff, noBg)
 	wave normalized  = $(name + "_NoBg_Norm")
-	computeDifference(normalized)
+	computeDifference(coeff, normalized)
 end
 
 
