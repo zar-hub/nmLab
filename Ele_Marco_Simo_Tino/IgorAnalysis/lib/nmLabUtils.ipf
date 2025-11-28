@@ -1,6 +1,8 @@
 #include ":utils"
 
-function removeBackground(wave coeff, wave image)
+function removeBackground(wave coeff, wave image, [variable sleepTime])
+	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
+
 	Print "Removing background using Mulitcomponents and CO of image : ",nameofWave(image)
 	duplicate/o image, $(nameOfWave(image) + "_NoBG")
 	wave background = $(nameOfWave(image) + "_NoBG")
@@ -19,11 +21,12 @@ function removeBackground(wave coeff, wave image)
 		plotPeaksC1S_compAndCO(thisCoeff, thisBackground, plot="bg")
 		background[][i] = slice[p] - thisBackground[p]
 		doUpdate
-		Sleep/s 0.1
+		Sleep/s sleepTime
 	endfor 
 end
 
-function normalizeArea(wave coeff, wave image)
+function normalizeArea(wave coeff, wave image, [variable sleepTime])
+	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
 	Print "Normalizing spectra using area: ",nameofWave(image)
 	duplicate/o image, $(nameOfWave(image) + "_Norm")
 	wave normImage = $(nameOfWave(image) + "_Norm")
@@ -46,18 +49,19 @@ function normalizeArea(wave coeff, wave image)
 		fitSlice = dsgnmBad2_MTHR(thisCoeff, x)
 		slice = image[p][i]
 		doUpdate
-		Sleep/s 0.1
+		Sleep/s sleepTime
 		
 		slice = slice[p] / waveMax(fitSlice)
 		fitSlice = fitSlice[p] / waveMax(fitSlice)
 		normImage[][i] = slice[p]
 		
 		doUpdate
-		Sleep/s 0.1
+		Sleep/s sleepTime
 	endfor 
 end
 
-function computeDifference(wave coeff, wave image, [variable n])
+function computeDifference(wave coeff, wave image, [variable n, variable sleepTime])
+	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
 
 	variable A
 	n = paramisDefault(n) ? 0 : n
@@ -86,21 +90,40 @@ function computeDifference(wave coeff, wave image, [variable n])
 	for(i=0;i<dimsize(image,1);i++)
 		slice = image[p][i]
 		doupdate
-		sleep/s 0.1
+		sleep/s sleepTime
 		diffImage[][i] = slice[p] - fitSlice[p]
 		
 	endfor
 end
 
-function lineshapeCompatibility(wave coeff, wave image)
+function lineshapeCompatibility(wave coeff, wave image, [variable sleepTime])
+	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
 	string name = nameofWave(image)
-	removeBackground(coeff, image)
+	removeBackground(coeff, image, sleepTime=sleepTime)
 	wave noBg = $(name + "_NoBg")
-	normalizeArea(coeff, noBg)
+	normalizeArea(coeff, noBg, sleepTime=sleepTime)
 	wave normalized  = $(name + "_NoBg_Norm")
-	computeDifference(coeff, normalized)
+	computeDifference(coeff, normalized, sleepTime=sleepTime)
 end
 
+
+function batchLineshapeAnalysis([variable sleepTime])
+	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
+	make/t/free targets = {"SE0523_100_2D", "SE0523_104_2D", "SE0523_108_2D", "SE0523_112_2D", "SE0523_120_2D", "SE0524_004_2D","SE0524_076_2D","SE0524_080_2D","SE0525_003_2D","SE0525_007_2D","SE0525_011_2D","SE0525_015_2D"}
+	DFREF saveDFR = GetDataFolderDFR()		// Save
+	SetDataFolder root:
+	Print "batchLineshapeAnalysis"
+	for(string target : targets)
+		setDataFolder $("root:"+target+":")
+		wave image = $(target)
+		wave coeff = $(target + "_COEFF")
+		lineshapeCompatibility(coeff, image, sleepTime=sleepTime)
+	endfor
+	
+	
+	SetDataFolder saveDFR		// and restore
+	
+end
 
 function createFolder(wave wav, [wave initial_coeff])
 
