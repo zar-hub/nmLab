@@ -34,3 +34,15 @@ function imageSlice(image, offset)
 		appendtoGraph/c=(0,0,0) imageSlices[][i]
 	endfor
 end
+
+function imageNoiseStyle(image)
+	wave image 
+	variable N = dimsize(image, 0)
+	variable i
+	
+	// assume graph is open
+	for(i=0; i<dimSize(image, 1); i++)
+	//	modifygraph
+	endfor
+	
+end

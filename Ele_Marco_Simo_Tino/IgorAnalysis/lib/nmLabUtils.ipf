@@ -1,4 +1,36 @@
+#pragma rtGlobals=3
 #include ":utils"
+
+menu "nmLabUtils"
+	"-"
+	"Batch Lineshape Analysis /1", batchLineshapeAnalysis()
+	"-"
+	"Fit C1STR (Current Folder)", MenuItemFitC1STR()
+	"Fit C1STR with CO (Current Folder)"	
+end
+
+function MenuItemFitC1STR()
+	string currentFolder = getdataFolder(0)
+	string imageName = currentFolder
+	string coeffName = imageName + "_COEFF"
+	
+	print "Fitting spectra from wave:", imageName
+	
+	wave/z image = $imageName
+	if(!waveexists(image))
+		print "wave does not exist"
+		return -1
+	endif
+	// if there are already coeff in the folder respect that
+	wave/z coeff = $coeffName
+	
+	if(!waveexists(coeff))
+		wave coeff = $("root:"+"KDefault_C1S_MultipleComponents")
+		fitimageC1S(coeff, image,"multicomp",  offset = 30, duplicateInFolder=1)
+	else
+		fitimageC1S(coeff, image,"multicomp",  offset = 30)
+	endif
+end
 
 function removeBackground(wave coeff, wave image, [variable sleepTime])
 	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
