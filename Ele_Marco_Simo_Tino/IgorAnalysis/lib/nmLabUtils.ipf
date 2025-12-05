@@ -9,6 +9,7 @@ menu "nmLabUtils"
 	"Fit C1STR with CO (Current Folder)"	
 end
 
+
 function MenuItemFitC1STR()
 	string currentFolder = getdataFolder(0)
 	string imageName = currentFolder
@@ -90,6 +91,62 @@ function normalizeArea(wave coeff, wave image, [variable sleepTime])
 		doUpdate
 		Sleep/s sleepTime
 	endfor 
+end
+
+function fitImageGauss(wave image)
+
+	variable N = dimsize(image, 1)
+	variable i
+	wave slice = $getslice(image, 0, name="slice")
+	wave w_coeff = $getglobalWave("W_coeff")
+	duplicate/o slice fitslice
+	
+	display/n=tempGraph slice, fitslice
+
+	for(i=0;i<N;i++)
+		slice[] = image[p][i]
+		curvefit gauss slice/d=fitslice
+		doUpdate
+		sleep/s 0.1
+	endfor
+	
+	killwindow tempGraph
+	killwaves slice, fitslice	
+end
+
+function histogram2D(wave image)
+	string name = nameofWave(image)
+	wave slice = $getSlice(image, 0)
+
+	// result
+	//  Sturges' method
+	int nbin = 1 + round((ln(dimsize(slice,0))/ln(2)))
+
+	make/o/n=(nbin) hist
+	make/o/n=0 $(name + "_Hist")
+	make/free/n=0 tmp
+	wave hist2D = $(name + "_Hist")
+	
+	int i 
+	display/n=tempGraph0/w=(0,0,400,300) slice
+	display/n=tempGraph1/w=(400,0,800,300) hist
+	
+	for(i=0;i<dimsize(image,1);i++)
+		slice[] = image[p][i]
+		Histogram/B=1 slice, hist
+		if(i==0)
+			duplicate/o hist hist2D
+		else
+			concatenate/o {hist2D, hist}, tmp
+			duplicate/o tmp hist2D
+		endif
+		
+		doUPdate
+	endfor
+	
+	killWIndow tempGraph0
+	killWIndow tempGraph1 
+	killwaves hist, slice
 end
 
 function computeDifference(wave coeff, wave image, [variable n, variable sleepTime])
@@ -198,7 +255,6 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
 	if(!paramIsDefault(duplicateInFolder))
 		duplicate/o initial_coeff $nameofwave(initial_coeff) // duplicate the initial coeff in current folder
 	endif
-	
 	
 	// if initial_coeff wave is 2D then duplicate and split it,
 	// the second column is the hold parameters

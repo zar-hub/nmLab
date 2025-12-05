@@ -1,17 +1,19 @@
-function/wave getSlice(image, i)
+function/s getSlice(image, i, [name])
 	wave image
 	variable i
 	
-	string name, new 
-	name = nameofWave(image)
-	new = name + "_slice" + num2str(i)
+	string name
+	if(paramisDefault(name))
+		name = nameofWave(image)
+		name = name + "_slice" + num2str(i)
+	endif 
 	
 	// duplicate also copies the scaling
-	duplicate/o/rmd=[][i] image $new 
+	duplicate/o/rmd=[][i] image $name 
 	
 	// redimention to get a 1D wave
-	redimension/n=(-1,0) $new
-	return $new
+	redimension/n=(-1,0) $name
+	return name
 	
 	// Maybe this is another way to do it using copyscale
 	//	Make/o/n=(N) fitres
