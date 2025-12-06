@@ -1,4 +1,17 @@
 // === UTILITY FUNCTIONS ===
+
+Function MakeEdgesWave(centers, edgesWave)
+	Wave centers	// Input
+	Wave edgesWave	// Receives output
+	
+	Variable N=numpnts(centers)
+	Redimension/N=(N+1) edgesWave
+
+	edgesWave[0]=centers[0]-0.5*(centers[1]-centers[0])
+	edgesWave[N]=centers[N-1]+0.5*(centers[N-1]-centers[N-2])
+	edgesWave[1,N-1]=centers[p]-0.5*(centers[p]-centers[p-1])
+End
+
 function updateAndSleep(variable t)
 	if(t > 0)
 		doupdate
@@ -68,6 +81,37 @@ function/s getGlobalWave(string name, [string folder, wave like])
 	endif
 	
 	return name
+end
+
+function deleteWaves(strToDelete)
+   String strToDelete
+   String wList = WaveList(strToDelete, ";", "")
+   Variable nWaves = ItemsInList(wList)
+   String wName
+   Variable i
+ 
+   for(i = 0; i < nWaves; i += 1)
+      wName = StringFromList(i, wList)
+      KillWaves/Z $wName        
+   endfor
+end
+
+function deleteGraphs(strToDelete)
+   String strToDelete
+   String wList = WinList(strToDelete, ";", "WIN:1")
+   Variable nWaves = ItemsInList(wList)
+   String wName
+   Variable i
+ 
+   for(i = 0; i < nWaves; i += 1)
+      wName = StringFromList(i, wList)
+      killwindow/z $wName       
+   endfor
+end
+
+function cleanupTmpObj()
+	deletegraphs("tmp*")
+	deletewaves("tmp*")
 end
 
 function getNumberFrom(string s, int pos)

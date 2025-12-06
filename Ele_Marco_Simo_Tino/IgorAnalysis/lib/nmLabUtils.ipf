@@ -1,4 +1,6 @@
-#pragma rtGlobals=3
+#pragma TextEncoding = "UTF-8"
+#pragma rtGlobals=3				// Use modern global access method and strict wave access
+#pragma DefaultTab={3,20,4}		// Set default tab width in Igor Pro 9 and later
 #include ":utils"
 
 menu "nmLabUtils"
@@ -33,185 +35,72 @@ function MenuItemFitC1STR()
 	endif
 end
 
-function removeBackground(wave coeff, wave image, [variable sleepTime])
-	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
 
-	Print "Removing background using Mulitcomponents and CO of image : ",nameofWave(image)
-	duplicate/o image, $(nameOfWave(image) + "_NoBG")
-	wave background = $(nameOfWave(image) + "_NoBG")
+function/s figure89mm([string name, variable ratio, string host])
+
+	ratio = paramIsDefault(ratio) ? 1.618 : ratio	// default to golden ratio
+	if(paramisDefault(name))
+		name = "graph"
+	endif
+	if(paramisDefault(host))
+		display/n=$name
+	else
+		display/n=$name/host=$host
+	endif
 	
-	// get 1D waves
-	duplicate/o/rmd=[][0] image, thisBackground, slice
-	redimension/n=(-1,0) thisBackground, slice
-	duplicate/o/rmd=[][0] coeff, thisCoeff
-	redimension/n=(-1,0) thisCoeff
-	
-	display thisBackground, slice
-	int i 
-	for(i=0;i<dimsize(image,1);i++)
-		thisCoeff[] = coeff[p][i]
-		slice[] = image[p][i]
-		plotPeaksC1S_compAndCO(thisCoeff, thisBackground, plot="bg")
-		background[][i] = slice[p] - thisBackground[p]
-		doUpdate
-		Sleep/s sleepTime
-	endfor 
+	ModifyGraph width=252.283,height=(252.283 / ratio)
+	ModifyGraph margin=0
+
+	return name
 end
 
-function normalizeArea(wave coeff, wave image, [variable sleepTime])
-	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
-	Print "Normalizing spectra using area: ",nameofWave(image)
-	duplicate/o image, $(nameOfWave(image) + "_Norm")
-	wave normImage = $(nameOfWave(image) + "_Norm")
-	
-	// get 1D waves
-	duplicate/o/rmd=[][0] image, slice, fitSlice
-	redimension/n=(-1,0) slice, fitSlice
-	duplicate/o/rmd=[][0] coeff, thisCoeff
-	redimension/n=(-1,0) thisCoeff
-	
-	display slice, fitSlice
-	int i 
-	for(i=0;i<dimsize(image,1);i++)
-		// remove bg and CO
-		thisCoeff[] = coeff[p][i]
-		thisCoeff[0,1] = 0
-		thisCOeff[5] = 0
-		
-		// get the slices
-		fitSlice = dsgnmBad2_MTHR(thisCoeff, x)
-		slice = image[p][i]
-		doUpdate
-		Sleep/s sleepTime
-		
-		slice = slice[p] / waveMax(fitSlice)
-		fitSlice = fitSlice[p] / waveMax(fitSlice)
-		normImage[][i] = slice[p]
-		
-		doUpdate
-		Sleep/s sleepTime
-	endfor 
+function appendImageCScale(wave image)
+
+	string name = nameofWave(image)	
+	string folderName = getdataFolder(0)
+	string timeName = "Time"+folderName[2,9]
+	wave timew = $getGlobalWave(timeName, folder=":initial")
+	wave timecenters = $getGlobalWave(timeName + "_centers", folder=":initial", like=timew)
+	makeedgesWave(timew, timecenters)
+
+	appendImage/T image vs { *, timecenters}
+	ColorScale/C/N=cScale/F=0/S=3/Z=1/B=1/A=RC/X=0.00/Y=-5.50/E heightPct=110,image=$name
+	ModifyGraph standoff=0, mirror=2
+	SetAxis/A/R left
 end
 
-function fitImageGauss(wave image)
-
-	variable N = dimsize(image, 1)
-	variable i
-	wave slice = $getslice(image, 0, name="slice")
-	wave w_coeff = $getglobalWave("W_coeff")
-	duplicate/o slice fitslice
-	
-	display/n=tempGraph slice, fitslice
-
-	for(i=0;i<N;i++)
-		slice[] = image[p][i]
-		curvefit gauss slice/d=fitslice
-		doUpdate
-		sleep/s 0.1
-	endfor
-	
-	killwindow tempGraph
-	killwaves slice, fitslice	
-end
 
 function histogram2D(wave image)
 	string name = nameofWave(image)
-	wave slice = $getSlice(image, 0)
+	wave tmpSlice = $getSlice(image, 0, name="tmpSlice")
 
 	// result
 	//  Sturges' method
-	int nbin = 1 + round((ln(dimsize(slice,0))/ln(2)))
+	int nbin = 1 + round((ln(dimsize(tmpSlice,0))/ln(2)))
 
-	make/o/n=(nbin) hist
+	make/o/n=(nbin) tmpHist
 	make/o/n=0 $(name + "_Hist")
 	make/free/n=0 tmp
 	wave hist2D = $(name + "_Hist")
 	
 	int i 
-	display/n=tempGraph0/w=(0,0,400,300) slice
-	display/n=tempGraph1/w=(400,0,800,300) hist
+	display/n=tmpGraph0/w=(0,0,400,300) tmpSlice
+	display/n=tmpGraph1/w=(400,0,800,300) tmpHist
 	
 	for(i=0;i<dimsize(image,1);i++)
-		slice[] = image[p][i]
-		Histogram/B=1 slice, hist
+		tmpSlice[] = image[p][i]
+		Histogram/B=1 tmpSlice, tmpHist
 		if(i==0)
-			duplicate/o hist hist2D
+			duplicate/o tmpHist hist2D
 		else
-			concatenate/o {hist2D, hist}, tmp
+			concatenate/o {hist2D, tmpHist}, tmp
 			duplicate/o tmp hist2D
 		endif
 		
 		doUPdate
 	endfor
 	
-	killWIndow tempGraph0
-	killWIndow tempGraph1 
-	killwaves hist, slice
-end
-
-function computeDifference(wave coeff, wave image, [variable n, variable sleepTime])
-	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
-
-	variable A
-	n = paramisDefault(n) ? 0 : n
-	Print "Computing difference using first fit spectre as reference"
-	
-	duplicate/o image, $(nameOfWave(image) + "_Diff")
-	wave diffImage = $(nameOfWave(image) + "_Diff")
-	
-	duplicate/o/rmd=[][0] image, slice, fitSlice
-	redimension/n=(-1,0) slice, fitSlice
-	duplicate/o/rmd=[][0] coeff, thisCoeff
-	redimension/n=(-1,0) thisCoeff
-	
-	// get n-th slice witout bg and CO
-	thisCoeff[] = coeff[p][n]
-	thisCoeff[0,1] = 0
-	thisCOeff[5] = 0
-
-	fitSlice = dsgnmBad2_MTHR(thisCoeff, x)
-	A = waveMax(fitSlice)
-	fitSlice = fitSlice[p] / A 
-	
-	display slice, fitSlice
-	
-	int i 
-	for(i=0;i<dimsize(image,1);i++)
-		slice = image[p][i]
-		doupdate
-		sleep/s sleepTime
-		diffImage[][i] = slice[p] - fitSlice[p]
-		
-	endfor
-end
-
-function lineshapeCompatibility(wave coeff, wave image, [variable sleepTime])
-	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
-	string name = nameofWave(image)
-	removeBackground(coeff, image, sleepTime=sleepTime)
-	wave noBg = $(name + "_NoBg")
-	normalizeArea(coeff, noBg, sleepTime=sleepTime)
-	wave normalized  = $(name + "_NoBg_Norm")
-	computeDifference(coeff, normalized, sleepTime=sleepTime)
-end
-
-
-function batchLineshapeAnalysis([variable sleepTime])
-	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
-	make/t/free targets = {"SE0523_100_2D", "SE0523_104_2D", "SE0523_108_2D", "SE0523_112_2D", "SE0523_120_2D", "SE0524_004_2D","SE0524_076_2D","SE0524_080_2D","SE0525_003_2D","SE0525_007_2D","SE0525_011_2D","SE0525_015_2D"}
-	DFREF saveDFR = GetDataFolderDFR()		// Save
-	SetDataFolder root:
-	Print "batchLineshapeAnalysis"
-	for(string target : targets)
-		setDataFolder $("root:"+target+":")
-		wave image = $(target)
-		wave coeff = $(target + "_COEFF")
-		lineshapeCompatibility(coeff, image, sleepTime=sleepTime)
-	endfor
-	
-	
-	SetDataFolder saveDFR		// and restore
-	
+	cleanupTmpObj()
 end
 
 function createFolder(wave wav, [wave initial_coeff])
@@ -497,6 +386,8 @@ function startAnalysis(wave image, wave FL)
 	setDataFolder root:
 	
 end
+
+
 
 function calibrateImageFLIN(string imageName, string FLName, string currentName)
 	// Calibrates an image using
