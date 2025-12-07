@@ -2,16 +2,21 @@
 #pragma rtGlobals=3				// Use modern global access method and strict wave access
 #pragma DefaultTab={3,20,4}		// Set default tab width in Igor Pro 9 and later
 
-function NewImageLSCompatibility(wave image)
+function NewImageLSCompatibility(wave image,  [string suffix])
 	string name = nameofWave(image)
-	figure89mm(name = name)
-	appendimageCScale(image)
+	if(paramisDefault(suffix))
+	 	suffix = ""
+	endif
+	NewImageGreyScale(image, suffix=suffix)
 	ModifyImage ''#0 ctab= {-2,2,BlackBody,0},minRGB=(0,0,0),maxRGB=(0,0,0)
 	SavePICT/O/P=home/E=-5/TRAN=1/RES=300 as "img:"+name +".png"
 end
 
-function NewImageGreyScale(wave image)
+function NewImageGreyScale(wave image, [string suffix])
 	string name = nameofWave(image)
+	if(!paramisDefault(suffix))
+		name = name + suffix
+	endif
 	figure89mm(name = name)
 	appendimageCScale(image)
 	SavePICT/O/P=home/E=-5/TRAN=1/RES=300 as "img:"+name +".png"
@@ -155,11 +160,12 @@ function fitImageGauss(wave image)
 	tmpx = x 
 	
 	make/o/n=(4,0) $(nameofWave(image) + "_GaussCoeff"), tmpCoeff
-	
+	make/o/n=(N)   $(nameofWave(image) + "_GaussWidth")
 	make/o/n=100 tmpFitSlice
 	copyscales	tmpSlice tmpFitSlice
 	
 	wave save_coeff = $(nameofWave(image) + "_GaussCoeff")
+	wave sigma =  	  $(nameofWave(image) + "_GaussWidth")
 	
 	display/n=tmpGraph tmpSlice, tmpFitSlice
 	save_coeff = 0
@@ -168,6 +174,7 @@ function fitImageGauss(wave image)
 	// 1st time is manual
 	curvefit/Q gauss tmpSlice
 	save_coeff[][0] = w_coeff[p]
+	sigma[0] = w_coeff[3]
 	
 	for(i=1;i<N;i++)
 		tmpSlice[] = image[p][i]
@@ -176,6 +183,7 @@ function fitImageGauss(wave image)
 		//tmpFitSlice = w_coeff[0] + w_coeff[1] * tmpFitSlice[p]
 		concatenate/o {save_coeff, w_coeff}, tmpCoeff
 		duplicate/o  tmpCoeff save_coeff
+		sigma[i] = w_coeff[3]
 		doUpdate
 		sleep/s 0.1
 	endfor

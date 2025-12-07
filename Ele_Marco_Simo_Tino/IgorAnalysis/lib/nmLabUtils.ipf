@@ -6,13 +6,32 @@
 menu "nmLabUtils"
 	"-"
 	"Batch Lineshape Analysis /1", batchLineshapeAnalysis()
+	"Run Lineshape Analysis /2", runLineshapeCompatibility()
 	"-"
 	"Fit C1STR (Current Folder)", MenuItemFitC1STR()
-	"Fit C1STR with CO (Current Folder)"	
+	"Fit C1STR with CO (Current Folder)", MenuItemFitC1STRAndCO()	
+	"-"
+	
 end
 
+function runLineshapeCompatibility()
+	string currentFolder = getdataFolder(0)
+	string imageName = currentFolder
+	string coeffName = imageName + "_COEFF"
+	
+	wave/z image = $imageName
+	wave/z coeff = $coeffName
+	if(!waveexists(image) || !waveexists(coeff))
+		print "wave does not exist"
+		return -1
+	endif
+	
+	print "Running lineshape compatibility for wave:", imageName
+	lineshapecompatibility(coeff, image)
+	
+end
 
-function MenuItemFitC1STR()
+function FitC1STR(string coeffType)
 	string currentFolder = getdataFolder(0)
 	string imageName = currentFolder
 	string coeffName = imageName + "_COEFF"
@@ -24,15 +43,24 @@ function MenuItemFitC1STR()
 		print "wave does not exist"
 		return -1
 	endif
+	
 	// if there are already coeff in the folder respect that
-	wave/z coeff = $coeffName
+	wave/z coeff = $coeffType
 	
 	if(!waveexists(coeff))
-		wave coeff = $("root:"+"KDefault_C1S_MultipleComponents")
-		fitimageC1S(coeff, image,"multicomp",  offset = 30, duplicateInFolder=1)
+		wave coeff = $("root:"+coeffType)
+		fitimageC1S(coeff, image,"compAndCo",  offset = 30, duplicateInFolder=1, overclock=1)
 	else
-		fitimageC1S(coeff, image,"multicomp",  offset = 30)
+		fitimageC1S(coeff, image,"compAndCo",  offset = 30, overclock=1)
 	endif
+end
+
+function MenuItemFitC1STR()
+	FitC1STR("KDefault_C1S_MultipleComponents")
+end
+
+function MenuItemFitC1STRAndCO()
+	FitC1STR("KDefault_C1S_MultipleComponentsAndCO")
 end
 
 
@@ -42,6 +70,8 @@ function/s figure89mm([string name, variable ratio, string host])
 	if(paramisDefault(name))
 		name = "graph"
 	endif
+	
+	killwindow/z $name
 	if(paramisDefault(host))
 		display/n=$name
 	else
@@ -160,19 +190,20 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
 	duplicate/o src_image $name
 	wave image = $name
 	wave fit = copy_append(image, "FIT")
+	wave resid = copy_append(image, "RES")
 	wave coeff = copy_append_coeff(image, initial_coeff, "COEFF") 
 	wave sigma = new_append_coeff(image, initial_coeff, "SIGMA")
 	string gName, wname, tboxName
 	variable i, N, j
-   string num, trace
+   	string num, trace
    
-   // set def params
-   N = dimsize(image, 1)
-   start = paramisDefault(start) ? 0 : start
-   stop = paramisDefault(stop) ? N : min(stop, N)
+   	// set def params
+   	N = dimsize(image, 1)
+   	start = paramisDefault(start) ? 0 : start
+   	stop = paramisDefault(stop) ? N : min(stop, N)
    
-   // save starting folder
-   dfreF startingFolder = getDataFolderDFR()
+   	// save starting folder
+   	dfreF startingFolder = getDataFolderDFR()
 
 	// temp graph helpers
 	duplicate/o/rmd=[][start] image, $"slice", $"slice_fit"
@@ -188,38 +219,38 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
 	KillWindow/Z  $( name + "Panel" )
 	DoWindow/C $( name + "Panel" )
 	gName = winname(0, 64)
-   printf "Created Panel %s\n", gName
+   	printf "Created Panel %s\n", gName
    
 	// Create the Graphs
-   display/host=#/n=sliceFit/w=(0,0,0.60,1)	// SLICE FIT GRAPH
-   if(cmpstr(fitType, "multiComp") == 0)
+   	display/host=#/n=sliceFit/w=(0,0,0.60,1)	// SLICE FIT GRAPH
+   	if(cmpstr(fitType, "multiComp") == 0)
    		fitC1S_comp(slice_coeff, slice, res=slice_fit, wait = 1)
-   elseif(cmpstr(fitType, "co") == 0)
+   	elseif(cmpstr(fitType, "co") == 0)
    		fitC1S_CO(slice_coeff, slice, res=slice_fit, wait = 1)
    	elseif(cmpstr(fitType, "compAndCO") == 0)
    		fitC1S_compAndCO(slice_coeff, slice, res=slice_fit, wait = 1, quiet=quiet)
-   else
+   	else
    		Printf "Type : %s not supported...\n",fitType
    		i = N // do not enter the loop
-   endif
+   	endif
    
  	tboxName = "CF_"				// Put the box up left and
-   TextBox/C/N=$tboxName/A=LT/X=2/Y=2  // add two percent of padding to X and Y
-   setactiveSubwindow ##
+   	TextBox/C/N=$tboxName/A=LT/X=2/Y=2  // add two percent of padding to X and Y
+   	setactiveSubwindow ##
    
-   display/host=#/n=image/w=(0.61,0,1,1)	// IMAGE SLICES GRAPH
-   appendToGraph slice, slice_fit
-   setactiveSubwindow ##
-   doUpdate
+   	display/host=#/n=image/w=(0.61,0,1,1)	// IMAGE SLICES GRAPH
+   	appendToGraph slice, slice_fit
+   	setactiveSubwindow ##
+   	doUpdate
    
-   // check if starting values are correct
-   variable didAbort = 0
-   didAbort = UserPauseCheck(gname, 5)
-   if (didAbort)
-   	// go back to root
-   	setdataFolder startingFolder
-   	return -1
-   endif
+   	// check if starting values are correct
+   	variable didAbort = 0
+   	didAbort = UserPauseCheck(gname, 5)
+   	if (didAbort)
+   		// go back to root
+   		setdataFolder startingFolder
+   		return -1
+   	endif
     
 	// loop trough slices
 	printf "looping through %d slices\n", N
@@ -228,7 +259,7 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
 		MultiThreadingControl setMode = 8
 	endif
 	
-   for (i = start; i < stop; i++)   
+   	for (i = start; i < stop; i++)   
    		if(!quiet)
    			print ""
    			printf "===== FITTING SLICE : %s =====\n", num2str(i) 
@@ -254,6 +285,7 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
    		// save fit results
    		coeff[][i] = slice_coeff[p]
     	fit[][i] = slice_fit[p]
+    	resid[][i] = slice[p] -  slice_fit[p]
     	wave w_sigma = $"W_sigma"
     	sigma[][i] = w_sigma[p] // default sigma wave used by FuncFit
     	
@@ -295,13 +327,13 @@ function fitImageC1S(initial_coeff, src_image, fitType, [start, stop, offset, ov
 	// one last time 
 	setactiveSubwindow #image
 	num = "#" + num2str(i - 1)
-   trace = "'fit_slice" + num + "'"
+   	trace = "'fit_slice" + num + "'"
 	ModifyGraph lsize($trace)=0.9,rgb($trace)=(0,0,0)
 	removeFromGraph slice, slice_fit
 	setactiveSubwindow ##
     
-   // go back to root
-   setdataFolder startingFolder
+   	// go back to root
+   	setdataFolder startingFolder
 end
 
 function removeAllX(string name)

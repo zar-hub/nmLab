@@ -20,7 +20,7 @@ function/s getSlice(image, i, [name])
 	//	copyscales/P image fitres
 end
 
-function imageSlice(image, offset)
+function displayImageSlices(image, offset)
 	wave image 
 	variable offset
 	
