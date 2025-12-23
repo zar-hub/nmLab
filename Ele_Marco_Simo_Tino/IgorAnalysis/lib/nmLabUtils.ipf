@@ -11,7 +11,7 @@ menu "nmLabUtils"
 	"Fit C1STR (Current Folder)", MenuItemFitC1STR()
 	"Fit C1STR with CO (Current Folder)", MenuItemFitC1STRAndCO()	
 	"-"
-	
+	"Get Results", getresults()
 end
 
 function runLineshapeCompatibility()
@@ -28,6 +28,57 @@ function runLineshapeCompatibility()
 	
 	print "Running lineshape compatibility for wave:", imageName
 	lineshapecompatibility(coeff, image)
+	
+end
+
+function getSmallPeakArea(wave coeff, wave image)
+	wave slice = $getSlice(image, 0, name = "tmpSlice")
+	wave thisCoeff = $getSLice(coeff, 0, name = "tmpCoeff")	
+	wave C1 = $getGlobalWave("C1", like = slice, folder = ":internal")
+	wave C2 = $getGlobalWave("C2", like = slice, folder = ":internal")
+	wave C3 = $getGlobalWave("C3", like = slice, folder = ":internal")
+	
+	string name = nameofWave(image)
+	make/o/n=(3,dimsize(image,1)) $(name + "_PeakAreas")	
+	wave areas = $(name + "_PeakAreas")	
+			
+	display/n=tmpGraph slice, C1, C2, C3
+	
+	int i 
+	for(i=0;i<dimsize(image,1);i++)
+		slice = image[p][i]
+		thisCoeff = coeff[p][i]
+		plotPeaksC1S_compAndCO(thisCoeff, slice)
+		
+		areas[0][i] = area(C1)
+		areas[1][i] = area(C2)
+		areas[2][i] = area(C3)
+		
+		doUpdate
+		sleep/s 0.1
+	endfor 
+	
+	cleanupTmpObj()
+end
+
+function getBlackPointsRatio(wave image)
+	int N = dimsize(image, 0)
+	int M = dimsize(image, 1)
+	int pixelCount = M * N
+	int i,j,counts
+	
+	counts = 0
+	for(j=0;j<M;j++)
+		for(i=0;i<N;i++)
+			if(abs(image[i][j]) > 2)
+				counts ++
+			endif
+		endfor
+	endfor
+	
+	string name = nameofWave(image)
+	printf "perc. ratio of image %s is %.4f\n", name, counts / pixelCount * 100
+	printf "counts : %d, tot : %d\n", counts, pixelCount
 	
 end
 
@@ -92,9 +143,15 @@ function appendImageCScale(wave image)
 	wave timew = $getGlobalWave(timeName, folder=":initial")
 	wave timecenters = $getGlobalWave(timeName + "_centers", folder=":initial", like=timew)
 	makeedgesWave(timew, timecenters)
+	
+	// image labels
+	// Label top "\\Z16Binding Energy [eV]"
+	// Label left "\\Z16Time [s]"
 
 	appendImage/T image vs { *, timecenters}
 	ColorScale/C/N=cScale/F=0/S=3/Z=1/B=1/A=RC/X=0.00/Y=-5.50/E heightPct=110,image=$name
+	ColorScale/C/N=cScale "\\Z16Counts/s"
+	ColorScale/C/N=cScale lblMargin=75,lblRot=180
 	ModifyGraph standoff=0, mirror=2
 	SetAxis/A/R left
 end
@@ -454,4 +511,90 @@ function calibrateImageFLIN(string imageName, string FLName, string currentName)
 	
 	printf "calibrated for xhalf : %.3f, curr : %.3f nA\n", xhalf, vCurr
 	
+end
+
+function/d getCurrentFromDFName()
+	string foldername = getdataFolder(0) 
+	string id = foldername[2,9]
+	string currName = "Current" + id
+	
+	
+	wave current = $getglobalWave(currName, folder=":initial")
+	variable vCurr = mean(current) / 1e-9 // normalize for current in nA
+	return vCurr
+end
+
+function getIdFromFName(string name)
+	// get the name without suffix
+	name = name[0,9]
+	wave/t ids = $"root:File_Block"
+	int i
+	string id
+	for(i = 0; i < dimsize(ids,0); i++)
+		id = ids[i]
+		if(cmpstr(name, id) == 0 )
+			return i 
+		endif
+	endfor
+	return -1
+end
+
+function getResults()
+	string foldername = getdataFolder(0) 
+	// get relevant results
+	wave image = $foldername
+	wave res = $(foldername + "_RES")
+	wave resFLS = $(foldername + "_FixLineShape_RES")
+	wave resNorm = $(foldername + "_RES_Norm")
+	wave resFLSNorm = $(foldername + "_FixLineShape_RES_Norm")
+	wave wsigma = $(foldername + "_RES_Hist_GaussWidth")
+	
+	// get run infos
+	wave wDwellTime = $"root:Dwell_Time_s"
+	wave wExcEnergy = $"root:Excitation_Energy_eV"
+	wave wPE = $"root:PE_eV"
+	wave wScans = $"root:Scans"
+	
+	int id = getidFromFName(folderName)
+	int pointsPerSlice = dimsize(res, 0)
+	int sliceNumber = dimsize(res,1)
+	double dwellT = wDwellTime[id]
+	double excEnergy = wExcEnergy[id]
+	double PE = wPE[id]
+	int scans = wScans[id]
+	double timePerSlice = dwellT * pointsPerSlice * scans
+	double current = getCurrentFromDFName()
+	double rescaleFactor = current / dwellT
+	double sigma = mean(wsigma) * rescaleFactor
+	
+	printf "file : %s, id : %d\n", foldername, id
+	printf "	points per spectrum : %d\n", pointsPerSlice
+	printf "	number of spectra : %d\n", sliceNumber
+	printf "	number of scans : %d\n", scans
+	printf "	dwellTime : %.3f s\n", dwellT
+	printf "	dwellTtime per spectrum : %.3f s\n", timePerSlice
+	printf "	excitation energy : %.3f eV\n", excEnergy
+	printf "	pass energy : %.3f eV\n", PE 
+	printf "	current : %.3f nA\n", current 
+	printf "	resid sigma : %.3f counts/s\n", sigma 
+	
+	
+	// recreate in folder like
+	wave results_image = $copyGlobalWave(foldername+" ", image, folder = ":results")
+	wave results_res = $copyGlobalWave(foldername + "_RES ", res, folder = ":results")
+	wave results_resFLS = $copyGlobalWave(foldername + "_RES_FLS ", resFLS, folder = ":results")
+	wave results_resNorm = $copyGlobalWave(foldername + "_RES_NORM ", resNorm, folder = ":results")
+	wave results_resFLSNorm = $copyGlobalWave(foldername + "_RES_SFLS_NORM ", resFLSNorm, folder = ":results")
+	
+	// rescale for nA and divide by time
+	
+	results_res = results_res * rescaleFactor
+	results_resFLS = results_resFLS * rescaleFactor
+	results_image = results_image * rescaleFactor
+	
+	// display and save
+	newimageGreyScale(results_res)
+	newimageGreyScale(results_resFLS)
+	newImageLSCompatibility(results_resNorm)
+	newImageLSCompatibility(results_resFLSNorm)
 end

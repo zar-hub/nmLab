@@ -83,6 +83,22 @@ function/s getGlobalWave(string name, [string folder, wave like])
 	return name
 end
 
+function/s copyGlobalWave(string name, wave like, [string folder])
+	// Get / create a wave with (name) duplicating [like] in the folder
+	// [folder]
+	duplicate/o like, $name 
+	
+	if(!paramIsDefault(folder))
+		// create folder if not exists
+		if(!dataFolderExists(folder))
+			newDataFolder $folder
+		endif
+		movetoFolder(folder, name)
+		return folder + ":" + name
+	endif
+	return name
+end
+
 function deleteWaves(strToDelete)
    String strToDelete
    String wList = WaveList(strToDelete, ";", "")

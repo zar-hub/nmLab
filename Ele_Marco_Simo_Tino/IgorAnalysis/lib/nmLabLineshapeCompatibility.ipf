@@ -9,6 +9,7 @@ function NewImageLSCompatibility(wave image,  [string suffix])
 	endif
 	NewImageGreyScale(image, suffix=suffix)
 	ModifyImage ''#0 ctab= {-2,2,BlackBody,0},minRGB=(0,0,0),maxRGB=(0,0,0)
+	ColorScale/C/N=cScale lblMargin=57
 	SavePICT/O/P=home/E=-5/TRAN=1/RES=300 as "img:"+name +".png"
 end
 
@@ -108,39 +109,54 @@ function normalizeArea(wave coeff, wave image, [variable sleepTime])
 	cleanupTmpObj()
 end
 
-function computeDifference(wave coeff, wave image, [variable n, variable sleepTime])
+function computeDifference(wave coeff, wave image, [variable n, variable meanWindow, variable sleepTime])
 	sleepTime = paramIsDefault(sleepTime) ? 0 : sleepTime
 
 	variable A
 	n = paramisDefault(n) ? 0 : n
-	Print "Computing difference using first fit spectre as reference"
+	meanWindow = paramisDefault(n) ? 5 : meanWindow
+	
+	Print "Computing difference using first %d fit spectre as reference\n", meanWindow
 	
 	duplicate/o image, $(nameOfWave(image) + "_Diff")
 	wave diffImage = $(nameOfWave(image) + "_Diff")
 	wave lostSignal = $(nameOfWave(image) + "_LostSignal")
 
 	
-	duplicate/o/rmd=[][0] image, tmpSlice, tmpFitSlice
-	redimension/n=(-1,0) tmpSlice, tmpFitSlice
+	duplicate/o/rmd=[][0] image, tmpSlice, tmpFitSlice, tmpThisFitSlice
+	redimension/n=(-1,0) tmpSlice, tmpFitSlice, tmpThisFitSlice
 	duplicate/o/rmd=[][0] coeff, tmpCoeff
 	redimension/n=(-1,0) tmpCoeff
 	
-	// get n-th tmpSlice witout bg and CO
-	tmpCoeff[] = coeff[p][n]
-	tmpCoeff[0,1] = 0
-	tmpCoeff[5] = 0
+	tmpFitSlice = 0
+	// get window mean	
+	int i
+	for(i=0;i<meanWindow;i++)
+		if(i >= dimsize(image,1))
+			print "Error, out of spectra!"
+			return -1
+		endif
+		// get n-th tmpSlice witout bg and CO
+		tmpCoeff[] = coeff[p][n]
+		tmpCoeff[0,1] = 0
+		tmpCoeff[5] = 0
 
-	tmpFitSlice = dsgnmBad2_MTHR(tmpCoeff, x)
-	A = waveMax(tmpFitSlice)
-	tmpFitSlice = tmpFitSlice[p] / A 
+		tmpThisFitSlice = dsgnmBad2_MTHR(tmpCoeff, x)
+		A = waveMax(tmpThisFitSlice)
+		tmpThisFitSlice = tmpThisFitSlice[p] / A 
+		
+		//add it to the mean
+		tmpFitSlice = tmpFitSlice[p] + tmpThisFitSlice[p]
+	endfor
+	
+	tmpFitSlice = tmpFitSlice / meanWindow	
 	
 	display/n=tmpGraph tmpSlice, tmpFitSlice
 	
-	int i 
 	for(i=0;i<dimsize(image,1);i++)
 		tmpSlice = image[p][i]
 		doupdate
-		sleep/s sleepTime
+		sleep/s 1
 		if(! lostSignal[i])
 			diffImage[][i] = tmpSlice[p] - tmpFitSlice[p]
 		endif
@@ -235,15 +251,13 @@ function lineshapeCompatibility(wave coeff, wave image, [variable sleepTime])
 	duplicate/o resultImage $(name + "_FixLineShape_RES_Norm")
 	wave residNorm = $(residName + "_Norm")
 	wave resultNorm = $(name + "_FixLineShape_RES_Norm")
-	wave sigma = $(name + "_RES_Hist_GaussWidth")
-	dividebyRows(residNorm, sigma)
-	dividebyRows(resultNorm, sigma)
+	wave wsigma = $(name + "_RES_Hist_GaussWidth")
+	double sigma = mean(wsigma)
 	
-	// display and save
-	newimageGreyScale(residImage)
-	newimageGreyScale(resultImage)
-	newImageLSCompatibility(residNorm)
-	newImageLSCompatibility(resultNorm)
+	//dividebyRows(residNorm, sigma)
+	//dividebyRows(resultNorm, sigma)
+	residNorm = residNorm / sigma
+	resultNorm = resultNorm / sigma
 end
 
 
